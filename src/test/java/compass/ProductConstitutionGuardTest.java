@@ -17,7 +17,8 @@ public class ProductConstitutionGuardTest
     {
         assertEquals(Arrays.asList(
                 "Automatic", "Barrows gloves", "Fire cape", "Quest cape",
-                "Prifddinas", "Bowfa", "Infernal cape", "Max cape"),
+                "Prifddinas", "Bowfa", "Infernal cape",
+                "Moons of Peril — Grind Ready", "Max cape"),
                 Arrays.asList(Arrays.stream(PlayerGoal.values())
                         .map(PlayerGoal::toString).toArray(String[]::new)));
         for (PlayerGoal goal : PlayerGoal.values())

@@ -180,6 +180,23 @@ public class VariableMethodGuidanceServiceTest
     }
 
     @Test
+    public void crudeChairsDoNotInventExactNailConsumption()
+    {
+        Guidance guidance = service.build(
+                data(Skill.CONSTRUCTION, 1,
+                        new ItemState(960, "Plank", 10),
+                        new ItemState(1539, "Steel nails", 20)),
+                Skill.CONSTRUCTION, 1, 4,
+                plan("construction_crude_chairs", Skill.CONSTRUCTION), true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getSupplies().contains("at least two steel nails"));
+        assertTrue(guidance.getSupplies().contains("extra steel nails"));
+        assertTrue(guidance.getNote().contains("does not fabricate an exact nail total"));
+        assertFalse(guidance.getAction().matches(".*[0-9]+ chairs.*"));
+    }
+
+    @Test
     public void bundledStaticProfilesRenderWithoutLosingPlaceholders()
     {
         String[] ids = {

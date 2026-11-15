@@ -17,14 +17,26 @@ public final class RecommendationDeduplicator
         if (candidates == null) return new ArrayList<>();
         for (Recommendation candidate : candidates)
         {
-            if (candidate == null) continue;
+            if (candidate == null || !Double.isFinite(candidate.score)
+                    || !Double.isFinite(candidate.strategicValue.scoreDelta())) continue;
             // Do not allow weaker evidence to borrow VERIFIED status from an
             // equivalent-looking action emitted by another provider.
-            var key = semanticKey(candidate) + "|" + candidate.confidence;
+            var key = semanticKey(candidate) + "|" + candidate.confidence + executionKey(candidate);
             var previous = merged.get(key);
             merged.put(key, previous == null ? candidate : merge(previous, candidate));
         }
         return new ArrayList<>(merged.values());
+    }
+
+    private static String executionKey(Recommendation candidate)
+    {
+        TrainingPlan plan = candidate.plan();
+        if (plan == null || plan.method() == null) return "";
+        // A shared skill target is a feedback identity, not proof of equivalent
+        // setup or outputs. Keep route-specific value attached to its own plan.
+        String route = canonicalActivity(candidate, plan) == null ? "|method:" + plan.method().id : "";
+        return route + (plan.readiness == null || plan.readiness.recipe == null
+                ? "" : "|recipe:" + plan.readiness.recipe.id);
     }
 
     String semanticKey(Recommendation candidate)
@@ -65,6 +77,7 @@ public final class RecommendationDeduplicator
                 primary.plan(), primary.confidence,
                 primary.currentLevel, primary.targetLevel,
                 primary.guidance, primary.safetyEvidence)
+                .withGoalProvenance(primary.goalProvenance)
                 .withStrategicValue(first.strategicValue.merge(
                         second.strategicValue));
     }

@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "validationDate": "2026-08-30",
+  "validationDate": "2026-11-12",
   "currentLiveStatus": "LIVE_CURRENT",
   "runtimeNetworking": false,
   "families": [
-    {"id":"quests","source":"RuneLite Quest enum plus pinned OSRS Wiki snapshots","snapshotDate":"2026-08-18","generatorVersion":"update-quest-enrichment.py/1","recordCount":211,"status":"PARTIAL"},
+    {"id":"quests","source":"RuneLite Quest enum plus pinned OSRS Wiki snapshots","snapshotDate":"2026-11-09","generatorVersion":"update-quest-enrichment.py/1 + manual review/2","recordCount":216,"status":"PARTIAL"},
     {"id":"miniquests","source":"manually Wiki-verified manifest","snapshotDate":"2026-08-19","generatorVersion":"manual/1","recordCount":19,"status":"STRUCTURED"},
     {"id":"training-methods","source":"RuneLite 1.12.35 calculators plus maintained current-live strategy catalog and official August 2026 overrides","snapshotDate":"2026-08-30","generatorVersion":"training-census/4","recordCount":180,"status":"STRUCTURED"},
     {"id":"pvm","source":"RuneLite 1.12.35 HiscoreSkill boss identities plus encounter preparation profiles","snapshotDate":"2026-08-25","generatorVersion":"pvm-preparation/3","recordCount":71,"status":"PARTIAL"},
@@ -15,9 +15,10 @@
     {"id":"clues","source":"RuneLite live clue item evidence","snapshotDate":"2026-08-25","generatorVersion":"manual/1","recordCount":6,"status":"PARTIAL"},
     {"id":"stash","source":"RuneLite 1.12.35 STASHUnit/EmoteClue plus current OSRS Wiki tier build rules","snapshotDate":"2026-08-25","generatorVersion":"scripts/generate-stash-catalog.sh/1","recordCount":119,"status":"STRUCTURED"},
     {"id":"gear","source":"maintained contextual acquisition catalog","snapshotDate":"2026-08-25","generatorVersion":"contextual-gear/3","recordCount":41,"status":"STRUCTURED"},
-    {"id":"resource-dependencies","source":"maintained deterministic recipes","snapshotDate":"2026-08-25","generatorVersion":"manual/2","recordCount":41,"status":"PARTIAL"},
-    {"id":"resource-sources","source":"maintained account-aware source families","snapshotDate":"2026-08-25","generatorVersion":"manual/2","recordCount":60,"status":"STRUCTURED"},
-    {"id":"strategy-sources","source":"pinned OSRS Wiki MediaWiki revisions plus RuneLite mechanics","snapshotDate":"2026-08-30","generatorVersion":"StrategySourceRegistry/3 + review-strategy-sources.py/1","recordCount":53,"status":"STRUCTURED"}
+    {"id":"resource-dependencies","source":"maintained deterministic recipes","snapshotDate":"2026-11-12","generatorVersion":"manual/3","recordCount":41,"status":"PARTIAL"},
+    {"id":"resource-sources","source":"maintained account-aware source families","snapshotDate":"2026-11-12","generatorVersion":"manual/3","recordCount":60,"status":"STRUCTURED"},
+    {"id":"strategy-sources","source":"pinned OSRS Wiki MediaWiki revisions plus RuneLite mechanics","snapshotDate":"2026-08-30","generatorVersion":"StrategySourceRegistry/3 + review-strategy-sources.py/1","recordCount":53,"status":"STRUCTURED"},
+    {"id":"knowledge-snapshots","source":"reviewed OSRS Wiki Action API item and Recipe templates pinned by revision and wikitext hash","snapshotDate":"2026-10-01","generatorVersion":"scripts/knowledge_pipeline.py/1","recordCount":6,"status":"STRUCTURED"}
   ],
   "announcedNotLive": [
     {"id":"summer-sweep-up-remaining-2026-09-02","effectiveDate":"2026-09-02","planningEnabled":false}

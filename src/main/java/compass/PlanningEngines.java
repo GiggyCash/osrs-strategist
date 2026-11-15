@@ -24,6 +24,32 @@ class AccountResourcePlanner
     private final MarketPriceService marketPriceService;
     private final ResourceSourceCatalog resourceSourceCatalog;
 
+    /** Shared purchase proof for guidance and typed preparation. Never treats unknown as zero. */
+    Purchase purchase(GameData data, List<MethodInput> needs)
+    {
+        if (data == null || data.account() == null
+                || !AccountMode.fromTypeCode(data.account().modeCode()).usesGrandExchange())
+            return new Purchase(RequirementState.BLOCKED, 0, "This account cannot use the Grand Exchange.");
+        Long cost = exactCost(needs);
+        var cash = data.economy();
+        if (cost == null || cash == null || !cash.hasUsableCash())
+            return new Purchase(RequirementState.CHECK_NEEDED, 0,
+                    "Purchase cannot be verified: observe usable prices and cash for the exact quantity.");
+        if (cash.coins < cost)
+            return new Purchase(RequirementState.BLOCKED, cost, "Insufficient observed cash for this batch.");
+        return new Purchase(RequirementState.VERIFIED, cost,
+                "Purchase is affordable for this batch (" + cost + " coins at observed prices); recheck before buying.");
+    }
+
+    static final class Purchase
+    {
+        final RequirementState state;
+        final long cost;
+        final String reason;
+        Purchase(RequirementState state, long cost, String reason)
+        { this.state = state; this.cost = cost; this.reason = reason; }
+    }
+
     public SupplyPlan plan(
             GameData data,
             List<MethodInput> rawNeeds,
@@ -38,7 +64,8 @@ class AccountResourcePlanner
         var groupIncluded = useGroupStorage && mode.isGroupIronman();
         var groupObserved = observed.groupStorageObserved();
 
-        var needs = merge(rawNeeds);
+        var needs = MethodInput.mergeExact(rawNeeds, false);
+        if (needs == null) return null;
         List<String> required = new ArrayList<>();
         List<String> verified = new ArrayList<>();
         List<String> missing = new ArrayList<>();
@@ -48,8 +75,8 @@ class AccountResourcePlanner
         for (MethodInput need : needs)
         {
             var reusableSource = reusableSourceFor(observed, need.getName());
-            var owned = observed.quantity(need.getName());
-            var restricted = observed.restrictedQuantity(need.getName());
+            var owned = observed.quantity(need);
+            var restricted = observed.restrictedQuantity(need);
             int shortfall = reusableSource == null
                     ? max(0, need.quantity - owned)
                     : 0;
@@ -196,16 +223,16 @@ class AccountResourcePlanner
             GameData data, String shortfall,
             List<MethodInput> missingInputs)
     {
-        Long cost = exactCost(missingInputs);
+        Purchase purchase = purchase(data, missingInputs);
+        Long cost = purchase.state == RequirementState.CHECK_NEEDED ? null : purchase.cost;
         List<String> routes = mainRoutes(missingInputs,
                 data == null || data.account() == null
                         ? Membership.UNKNOWN
                         : data.account().membership());
         AccountEconomySnapshot economy = data == null ? null : data.economy();
         long coins = economy == null ? 0 : max(0, economy.coins);
-        boolean priced = cost != null && cost > 0 && economy != null
-                && economy.confidence == Confidence.VERIFIED;
-        boolean affordable = priced && coins >= cost;
+        boolean priced = cost != null && cost > 0 && economy != null && economy.hasUsableCash();
+        boolean affordable = purchase.state == RequirementState.VERIFIED;
         boolean buy = affordable && (cost <= 1_000L && coins >= 5_000L
                 || cost <= coins / 10L && coins - cost >= 10_000L);
         if (buy)
@@ -256,14 +283,14 @@ class AccountResourcePlanner
         long total = 0;
         for (MethodInput input : missing)
         {
-            if (input == null || input.quantity <= 0) continue;
+            if (input == null || input.quantity <= 0 || input.getName() == null) return null;
             MarketPriceQuote quote = marketPriceService.quote(input.getName());
-            if (quote == null || !quote.hasPrice()) return null;
-            if (quote.getUnitPrice() > Long.MAX_VALUE / input.quantity
-                    || total > Long.MAX_VALUE
-                            - quote.getUnitPrice() * input.quantity)
-                return Long.MAX_VALUE;
-            total += quote.getUnitPrice() * input.quantity;
+            if (quote == null || !quote.hasPrice()
+                    || !input.getName().equalsIgnoreCase(quote.itemName)
+                    || input.itemId > 0 && input.itemId != quote.itemId) return null;
+            long lineCost = (long) quote.getUnitPrice() * input.quantity;
+            if (total > Long.MAX_VALUE - lineCost) return null;
+            total += lineCost;
         }
         return total > 0 ? total : null;
     }
@@ -367,51 +394,6 @@ class AccountResourcePlanner
         return null;
     }
 
-    /** Merge duplicate recipe rows before comparing them with storage. */
-    private static List<MethodInput> merge(
-            List<MethodInput> rawNeeds)
-    {
-        if (rawNeeds == null || rawNeeds.isEmpty()) return new ArrayList<>();
-        Map<String, MutableNeed> merged = new LinkedHashMap<>();
-        for (MethodInput input : rawNeeds)
-        {
-            if (input == null || input.getName() == null
-                    || input.getName().trim().isEmpty()
-                    || input.quantity <= 0)
-            {
-                continue;
-            }
-            var key = Names.lower(input.getName());
-            var existing = merged.get(key);
-            if (existing == null)
-            {
-                merged.put(key, new MutableNeed(
-                        input.getName().trim(),
-                        input.itemId,
-                        input.quantity));
-            }
-            else
-            {
-                existing.quantity = safeAdd(
-                        existing.quantity, input.quantity);
-            }
-        }
-
-        List<MethodInput> result = new ArrayList<>();
-        for (MutableNeed need : merged.values())
-        {
-            result.add(new MethodInput(
-                    need.name, need.itemId, need.quantity));
-        }
-        return result;
-    }
-
-    private static int safeAdd(int a, int b)
-    {
-        if (a >= Integer.MAX_VALUE - b) return Integer.MAX_VALUE;
-        return a + b;
-    }
-
     private static String join(List<String> parts)
     {
         if (parts == null || parts.isEmpty()) return "nothing";
@@ -432,19 +414,7 @@ class AccountResourcePlanner
     }
 
 
-    private static final class MutableNeed
-    {
-        private final String name;
-        private final int itemId;
-        private int quantity;
 
-        private MutableNeed(String name, int itemId, int quantity)
-        {
-            this.name = name;
-            this.itemId = itemId;
-            this.quantity = max(0, quantity);
-        }
-    }
 }
 
 /**
@@ -1372,6 +1342,21 @@ class QuestRequirementResolver
                                 definition.freeToPlay)));
         }
 
+        for (String prerequisite : definition.getStartedPrerequisites())
+        {
+            QuestStatus status = quests == null ? QuestStatus.UNKNOWN
+                    : quests.statusOf(prerequisite);
+            if (status != QuestStatus.IN_PROGRESS
+                    && status != QuestStatus.COMPLETE)
+                missing.add(new Preparation(status == QuestStatus.UNKNOWN
+                        ? "Verify or start " + prerequisite
+                        : "Start " + prerequisite,
+                        RestrictedQuestPolicy.isSafe(account, prerequisite)
+                                ? Safety.verifiedSafe(definition.freeToPlay)
+                                : Safety.potentiallyIrreversible(
+                                definition.freeToPlay)));
+        }
+
         for (Map.Entry<Skill, Integer> requirement
                 : definition.skillRequirements.entrySet())
         {
@@ -1413,9 +1398,34 @@ class QuestRequirementResolver
         }
 
         if (definition.getQuestPointsRequired() > 0)
-            missing.add(new Preparation(get(1924)
-                    + definition.getQuestPointsRequired() + " quest points",
-                    Safety.harmless(definition.freeToPlay)));
+        {
+            Integer observedQuestPoints = data.slayer() == null ? null
+                    : data.slayer().getQuestPoints();
+            if (observedQuestPoints == null)
+                missing.add(new Preparation(get(1924)
+                        + definition.getQuestPointsRequired() + " quest points",
+                        Safety.harmless(definition.freeToPlay)));
+            else if (observedQuestPoints < definition.getQuestPointsRequired())
+            {
+                int remaining = definition.getQuestPointsRequired()
+                        - observedQuestPoints;
+                missing.add(new Preparation("Earn " + remaining
+                        + " more quest points", "Earn " + remaining
+                        + " more quest points (" + observedQuestPoints + "/"
+                        + definition.getQuestPointsRequired() + " observed)",
+                        Safety.harmless(definition.freeToPlay)));
+            }
+        }
+        if (definition.getCombatLevelRequired() > 0)
+        {
+            int current = SlayerMasterCatalog.combatLevel(account);
+            if (current < definition.getCombatLevelRequired())
+                missing.add(new Preparation("Raise combat level from "
+                        + current + " to "
+                        + definition.getCombatLevelRequired(),
+                        Safety.potentiallyIrreversible(
+                                definition.freeToPlay)));
+        }
         for (String check : definition.getAccessChecks())
         {
             if (check != null && check.startsWith(IMPORTED_ITEM_PREFIX))
@@ -1682,7 +1692,7 @@ class RecommendationEngine
                 if (highestRankedPlan == null) highestRankedPlan = candidate;
                 Guidance candidateGuidance = buildGuidance(
                         context, skill, level,
-                        actionResolver.resolve(candidate, level, target),
+                        actionResolver.resolve(candidate, level, target, snapshot.membership()),
                         candidate);
                 if (candidateGuidance != null
                         && candidate.getStrategyProfile() != null)
@@ -1697,7 +1707,7 @@ class RecommendationEngine
                 // skill's only candidate and hide a ready lower-ranked route.
                 if (candidateGuidance == null) continue;
                 trainingPlan = candidate.withCurrentStageTargetLevel(
-                        actionResolver.resolve(candidate, level, target));
+                        actionResolver.resolve(candidate, level, target, snapshot.membership()));
                 guidance = candidateGuidance;
                 break;
             }
@@ -1707,6 +1717,7 @@ class RecommendationEngine
             // leading DO NEXT; this also preserves focused selector callers.
             if (trainingPlan == null) trainingPlan = highestRankedPlan;
             if (trainingPlan == null || trainingPlan.method() == null) continue;
+            breakpoint = reviewedBreakpoint(breakpoint, trainingPlan, level);
 
             var score = baseScore(level, breakpoint);
             score += safePreferences.weightFor(activityId) * 10.0;
@@ -1743,6 +1754,16 @@ class RecommendationEngine
         recommendations.sort(Comparator.comparingDouble(
                 Recommendation::getScore).reversed());
         return recommendations;
+    }
+
+    private static SkillBreakpoint reviewedBreakpoint(
+            SkillBreakpoint fallback, TrainingPlan plan, int currentLevel)
+    {
+        MethodIntelligenceCatalog.Recipe next = plan.readiness == null ? null : plan.readiness.nextUnlock;
+        if (fallback.kind != SkillBreakpoint.Kind.NEXT_LEVEL_FALLBACK || next == null
+                || next.level <= currentLevel || next.level != fallback.level) return fallback;
+        return new SkillBreakpoint(next.skill, next.level, "Unlock " + plan.readiness.nextUnlockName(),
+                SkillBreakpoint.Kind.TRAINING_ACTION_UNLOCK, "method-recipe:" + next.id);
     }
 
     private Guidance buildGuidance(
@@ -2931,8 +2952,9 @@ class StrategyEngine
 
         List<Recommendation> ready = new ArrayList<>();
         List<Recommendation> secondary = new ArrayList<>();
-        for (Recommendation recommendation : deduplicator.deduplicate(pool))
+        for (Recommendation recommendation : pool)
         {
+            if (recommendation == null) continue;
             recommendation = goalProvenanceService.attach(
                     recommendation, context);
             var semanticKey = deduplicator.semanticKey(recommendation);
@@ -2946,11 +2968,21 @@ class StrategyEngine
             else secondary.add(recommendation);
         }
 
+        // Invalid or secondary duplicates must not suppress an executable candidate.
+        ready = deduplicator.deduplicate(ready);
+        secondary = deduplicator.deduplicate(secondary);
+        Map<Recommendation, Double> scores = new IdentityHashMap<>();
+        for (List<Recommendation> tier : Arrays.asList(ready, secondary))
+            tier.removeIf(recommendation -> {
+                double score = intelligenceService.rankScore(recommendation, context)
+                        + semanticPreferenceScore(recommendation, context);
+                if (!Double.isFinite(score)) return true;
+                scores.put(recommendation, score);
+                return false;
+            });
+
         Comparator<Recommendation> byAccountValue = Comparator
-                .comparingDouble((Recommendation recommendation) ->
-                        intelligenceService.rankScore(recommendation, context)
-                                + semanticPreferenceScore(recommendation,
-                                        context))
+                .comparingDouble((Recommendation recommendation) -> scores.get(recommendation))
                 .reversed()
                 .thenComparing(Recommendation::getId,
                         Comparator.nullsLast(String::compareTo));
@@ -3015,8 +3047,15 @@ class StrategyEngine
 @Singleton
 class UniversalActionRecipeResolver
 {
-    private static final Recipe[] EXACT = BundledCatalogLoader.array(
-            get(1582), Recipe[].class);
+    private static final Set<String> SIMPLE_RUNECRAFT_ACTIONS =
+            new HashSet<>(Arrays.asList(
+                    "runelite:runecraft:air_rune",
+                    "runelite:runecraft:mind_rune",
+                    "runelite:runecraft:water_rune",
+                    "runelite:runecraft:earth_rune",
+                    "runelite:runecraft:fire_rune",
+                    "runelite:runecraft:body_rune"));
+    private static final ReviewedActionRecipeCatalog REVIEWED = new ReviewedActionRecipeCatalog();
 
     public UniversalActionRecipe resolve(ActionDef action, int count,
             Membership membership)
@@ -3025,37 +3064,25 @@ class UniversalActionRecipeResolver
             return unknown(get(1259));
         var name = action.getName() == null ? "" : action.getName().trim();
         var lower = name.toLowerCase(Locale.ROOT);
-        var exact = exact(action.getSkill(), lower);
-        if (exact != null) return exact.build(count);
+        var reviewed = REVIEWED.recipe(action.getSkill(), lower);
+        if (reviewed != null) return reviewed.build(count, membership);
         switch (action.getSkill())
         {
             case AGILITY: return none(get(899));
             case MINING: return none(get(910));
-            case FISHING: return none(get(921));
+            case FISHING: return unknown(get(921));
             case WOODCUTTING: return none(get(932));
             case THIEVING: return none(get(935));
             case HUNTER: return none(get(936));
-            case COOKING: return cooking(name, lower, count);
-            case FIREMAKING: return lower.contains("log")
-                    ? recipe(get(937), count, name, 1)
-                    : unknown(get(938));
-            case PRAYER: return contains(lower, "bones", "ashes", "head")
-                    ? recipe(get(939), count, name, 1)
-                    : unknown(get(900));
-            case RUNECRAFT: return recipe(get(901), count,
-                    membership == Membership.P2P
-                            ? "Pure essence" : "Rune essence", 1);
-            case CRAFTING: return crafting(name, lower, count);
-            case FLETCHING: return fletching(name, lower, count);
-            case SMITHING: return smithing(lower, count);
-            case FARMING: return lower.endsWith(" tree")
-                    ? recipe(get(930), count,
-                    name.substring(0, name.length() - 5).trim() + " sapling", 1)
-                    : unknown(get(929));
-            case MAGIC: return lower.endsWith(" curse")
-                    ? recipe(get(933), count, "Earth rune", 3,
-                    "Water rune", 2, "Body rune", 1)
-                    : unknown(get(934));
+            case COOKING: return unknown("No reviewed ingredient recipe is available for this food.");
+            case FIREMAKING: return unknown(get(938));
+            case PRAYER: return unknown(get(900));
+            case RUNECRAFT: return runecraft(action, count, membership);
+            case CRAFTING: return unknown(get(913));
+            case FLETCHING: return unknown(get(922));
+            case SMITHING: return unknown(get(924));
+            case FARMING: return unknown(get(929));
+            case MAGIC: return unknown(get(934));
             case HERBLORE: return unknown(get(925));
             case CONSTRUCTION: return unknown(get(928));
             default: return unknown(get(902));
@@ -3063,22 +3090,30 @@ class UniversalActionRecipeResolver
     }
 
     List<MethodInput> profileInputs(MethodProfile profile, ActionDef action,
-            int count)
+            int count, Membership membership)
     {
         if (profile == null || action == null || count <= 0) return emptyList();
-        Map<String, MethodInput> merged = new LinkedHashMap<>();
+        if (profile.inputs == null) return null;
+        if (profile.reviewedRecipes != null)
+        {
+            if (!profile.inputs.isEmpty()) return null;
+            String key = action.getSkill() + ":" + Names.lower(action.getName());
+            if (!profile.reviewedRecipes.contains(key)) return null;
+            var reviewed = REVIEWED.recipe(key);
+            if (reviewed == null) return null;
+            var recipe = reviewed.build(count, membership);
+            return recipe.hasExactInputs() ? recipe.inputs : null;
+        }
+        List<MethodInput> inputs = new ArrayList<>();
         for (MethodInputRule rule : profile.inputs)
         {
+            if (rule == null || rule.getMode() == null) return null;
+            if (rule.getMode() == MethodProfile.InputMode.NONE) continue;
             MethodInput input = profileInput(rule, action, count);
-            if (input == null) continue;
-            String key = input.itemId > 0 ? "id:" + input.itemId
-                    : "name:" + Names.lower(input.getName());
-            MethodInput old = merged.get(key);
-            merged.put(key, old == null ? input : new MethodInput(
-                    old.getName(), old.itemId,
-                    old.quantity + input.quantity));
+            if (input == null) return null;
+            inputs.add(input);
         }
-        return new ArrayList<>(merged.values());
+        return MethodInput.mergeExact(inputs, false);
     }
 
     private static MethodInput profileInput(MethodInputRule rule,
@@ -3096,40 +3131,15 @@ class UniversalActionRecipeResolver
                 name = value;
                 itemId = action.itemId;
                 break;
-            case RAW_ACTION_ITEM:
-                name = "Raw " + (lower.startsWith("cooked ")
-                        ? value.substring(7) : value);
-                break;
-            case LOG_FOR_BOW:
-                name = wood(value, "Logs");
-                break;
-            case BAR_FOR_SMITHED_ITEM:
-                String metal = first(lower, "bronze", "iron", "steel",
-                        "mithril", "adamant", "rune");
-                if (metal == null) return null;
-                name = metal.equals("adamant") ? "Adamantite bar"
-                        : metal.equals("rune") ? "Runite bar"
-                        : capitalize(metal) + " bar";
-                break;
-            case UNCUT_GEM:
-                name = lower.startsWith("uncut ") ? value : "Uncut " + lower;
-                break;
             case SAPLING_FOR_TREE:
                 if (lower.equals("spirit tree")) name = "Spirit seed";
                 else if (lower.equals("crystal tree")) name = "Crystal acorn";
+                else if (lower.equals("pineapple plant"))
+                    name = "Pineapple sapling";
                 else if (lower.endsWith(" tree"))
                     name = value.substring(0, value.length() - 5).trim()
                             + " sapling";
                 else return null;
-                break;
-            case DART_TIP_FOR_DART:
-                if (!lower.endsWith(" dart")) return null;
-                name = value.substring(0, value.length() - 5).trim()
-                        + " dart tip";
-                break;
-            case UNFINISHED_BOLT:
-                if (!lower.endsWith(" bolts")) return null;
-                name = value + " (unf)";
                 break;
             case FIXED:
                 name = rule.getFixedName();
@@ -3139,135 +3149,38 @@ class UniversalActionRecipeResolver
                 return null;
         }
         double units = rule.getQuantityPerAction();
-        if (units <= 0) units = rule.getMode()
-                == MethodProfile.InputMode.BAR_FOR_SMITHED_ITEM
-                && lower.contains("platebody") ? 5 : 1;
-        return new MethodInput(name, itemId, (int) Math.ceil(count * units));
+        if (!Double.isFinite(units)) return null;
+        if (units <= 0) units = 1;
+        double quantity = Math.ceil(count * units);
+        return !Double.isFinite(quantity) || quantity <= 0 || quantity > Integer.MAX_VALUE
+                ? null : new MethodInput(name, itemId, (int) quantity);
     }
 
-    private static Recipe exact(Skill skill, String name)
+    private static UniversalActionRecipe runecraft(ActionDef action, int count,
+            Membership membership)
     {
-        for (Recipe recipe : EXACT)
-            if (skill.name().equals(recipe.skill)
-                    && (recipe.contains ? name.contains(recipe.match)
-                    : name.equals(recipe.match))) return recipe;
-        return null;
-    }
-
-    private static UniversalActionRecipe cooking(String name, String lower, int n)
-    {
-        if (contains(lower, "jug of wine") || lower.equals("wine"))
-            return recipe(get(903), n, "Grapes", 1, "Jug of water", 1);
-        if (contains(lower, "cake", "pie", "pizza", "stew", "curry"))
-            return unknown(get(904));
-        String raw = lower.startsWith("raw ") ? name : "Raw "
-                + (lower.startsWith("cooked ") ? name.substring(7) : name)
-                .toLowerCase(Locale.ROOT);
-        return raw.trim().length() <= 4 ? unknown(get(905))
-                : recipe(get(906), n, raw, 1);
-    }
-
-    private static UniversalActionRecipe crafting(String name, String lower, int n)
-    {
-        if (gemName(lower) != null && !jewellery(lower) && !lower.contains("bolt"))
-            return recipe("Bring a chisel.", n,
-                    lower.startsWith("uncut ") ? name : "Uncut " + lower, 1);
-        if (contains(lower, "beer glass", "candle lantern", "oil lamp", "vial",
-                "fishbowl", "unpowered orb", "lantern lens")
-                && !lower.contains("molten"))
-            return recipe(get(909), n, "Molten glass", 1);
-        if (lower.contains("bird house"))
-            return recipe(get(911), n, wood(name, "Logs"), 1);
-        if (contains(lower, "d'hide", "dragonhide"))
-        {
-            int hides = lower.contains("body") ? 3 : lower.contains("chaps") ? 2
-                    : lower.contains("vambrace") ? 1 : 0;
-            if (hides > 0) return recipe(get(1264), n,
-                    capitalize(first(lower, "green", "blue", "red", "black",
-                            "dragon")) + " dragon leather", hides);
-        }
-        if (contains(lower, "leather gloves", "leather boots", "cowl",
-                get(1583), "leather body", "leather chaps", "coif"))
-            return recipe(get(1264), n, "Leather", 1);
-        if (contains(lower, get(1584), get(1585)))
-            return recipe(get(1264), n, "Hard leather", 1);
-        if (jewellery(lower))
-        {
-            var gem = gemName(lower);
-            String bar = gem != null && contains(gem, "opal", "jade", "red topaz")
-                    ? "Silver bar" : "Gold bar";
-            return gem == null ? recipe(get(1265), n, bar, 1)
-                    : recipe(get(1265), n, bar, 1, capitalize(gem), 1);
-        }
-        if (contains(lower, "battlestaff", "battlestave"))
-        {
-            var element = first(lower, "air", "water", "earth", "fire");
-            if (element != null) return recipe(get(912), n, "Battlestaff", 1,
-                    capitalize(element) + " orb", 1);
-        }
-        return unknown(get(913));
-    }
-
-    private static UniversalActionRecipe fletching(String name, String lower, int n)
-    {
-        if (lower.equals("arrow shaft") || lower.equals("arrow shafts"))
-            return recipe(get(914), 1, "Logs", ceil(n, 15));
-        if (lower.equals("headless arrow") || lower.equals("headless arrows"))
-            return recipe(get(915), n, "Arrow shaft", 1, "Feather", 1);
-        if (lower.endsWith("bow (u)"))
-            return recipe("Bring a knife.", n, wood(name, "Logs"), 1);
-        if (contains(lower, "shortbow", "longbow") && !lower.contains("(u)"))
-            return recipe(get(1266), n, name + " (u)", 1, "Bow string", 1);
-        if (lower.endsWith(" shield") || lower.endsWith(" stock"))
-            return recipe("Bring a knife.", n, wood(name, null),
-                    lower.endsWith(" shield") ? 2 : 1);
-        var metal = firstWord(name);
-        if (lower.endsWith(" dart") || lower.endsWith(" darts"))
-            return recipe(get(916), n, metal + " dart tip", 1, "Feather", 1);
-        if (lower.contains("broad arrow")) return recipe(get(917), n,
-                "Headless arrow", 1, "Broad arrowhead", 1);
-        if (projectile(lower, "arrow")) return recipe(get(918), n,
-                "Headless arrow", 1, metal + " arrowhead", 1);
-        if (projectile(lower, "javelin")) return recipe(get(919), n,
-                "Javelin shaft", 1, metal + " javelin head", 1);
-        if (basicBolt(lower)) return recipe(get(920), n,
-                metal + " bolts (unf)", 1, "Feather", 1);
-        return unknown(get(922));
-    }
-
-    private static UniversalActionRecipe smithing(String lower, int n)
-    {
-        var bars = smithingBarsFor(lower);
-        String metal = first(lower, "bronze", "iron", "steel", "mithril",
-                "adamant", "rune");
-        if (bars <= 0 || metal == null) return unknown(get(924));
-        String bar = metal.equals("adamant") ? "Adamantite bar"
-                : metal.equals("rune") ? "Runite bar" : capitalize(metal) + " bar";
-        return recipe(get(923), n, bar, bars);
-    }
-
-    static int smithingBarsFor(String value)
-    {
-        var lower = value == null ? "" : value;
-        if (lower.contains("platebody")) return 5;
-        if (contains(lower, "plateskirt", "platelegs", "2h sword", "kiteshield",
-                "chainbody", "battleaxe", "warhammer")) return 3;
-        if (contains(lower, "claws", "full helm", "sq shield", "longsword",
-                "scimitar")) return 2;
-        return contains(lower, "mace", "sword", "dagger", " axe", "med helm",
-                "dart tip", "knife", "arrowtip", "nails", "wire",
-                "unfinished bolt") ? 1 : 0;
+        String id = action.id == null ? ""
+                : action.id.toLowerCase(Locale.ROOT);
+        if (!SIMPLE_RUNECRAFT_ACTIONS.contains(id)
+                || (membership != Membership.P2P
+                && action.membership != Membership.F2P))
+            return unknown(get(901));
+        return recipe(get(901), count, membership == Membership.P2P
+                ? "Pure essence" : "Rune essence", 1);
     }
 
     private static UniversalActionRecipe recipe(String setup, int count,
             Object... items)
     {
-        List<MethodInput> inputs = new ArrayList<>();
-        for (int i = 0; i + 1 < items.length; i += 2)
-            if (items[i] != null && (Integer) items[i + 1] > 0)
-                inputs.add(new MethodInput((String) items[i], -1,
-                        multiply(count, (Integer) items[i + 1])));
-        return new UniversalActionRecipe(inputs, setup, true);
+        if (items.length % 2 != 0) return unknown("Recipe ingredients are unresolved.");
+        String[] names = new String[items.length / 2];
+        int[] units = new int[names.length];
+        for (int i = 0; i < names.length; i++)
+        {
+            names[i] = (String) items[i * 2];
+            units[i] = (Integer) items[i * 2 + 1];
+        }
+        return UniversalActionRecipe.scaled(names, null, units, count, setup);
     }
 
     private static UniversalActionRecipe none(String setup)
@@ -3277,81 +3190,5 @@ class UniversalActionRecipeResolver
     private static UniversalActionRecipe unknown(String setup)
     {
         return UniversalActionRecipe.unknown(setup);
-    }
-    private static boolean contains(String text, String... parts)
-    {
-        for (String part : parts) if (text.contains(part)) return true;
-        return false;
-    }
-    private static String first(String text, String... parts)
-    {
-        for (String part : parts) if (text.contains(part)) return part;
-        return null;
-    }
-    private static String gemName(String lower)
-    {
-        return first(lower, "red topaz", "opal", "jade", "sapphire", "emerald",
-                "ruby", "diamond", "dragonstone", "onyx", "zenyte");
-    }
-    private static boolean jewellery(String lower)
-    {
-        return lower.endsWith(" ring") || lower.endsWith(" bracelet")
-                || lower.endsWith(" necklace") || lower.contains("amulet");
-    }
-    private static String wood(String name, String fallback)
-    {
-        String value = first(name.toLowerCase(Locale.ROOT), "redwood", "magic",
-                "yew", "mahogany", "maple", "teak", "willow", "oak");
-        return value == null ? fallback : capitalize(value) + " logs";
-    }
-    private static boolean projectile(String lower, String kind)
-    {
-        return (lower.endsWith(" " + kind) || lower.endsWith(" " + kind + "s"))
-                && contains(lower, "bronze", "iron", "steel", "mithril",
-                "adamant", "rune", "amethyst", "dragon");
-    }
-    private static boolean basicBolt(String lower)
-    {
-        return (lower.endsWith(" bolt") || lower.endsWith(" bolts"))
-                && contains(lower, "bronze", "blurite", "iron", "silver",
-                "steel", "mithril", "adamant", "runite", "rune", "dragon")
-                && !contains(lower, "opal", "pearl", "barbed", "kebbit",
-                "sapphire", "emerald", "ruby", "diamond", "dragonstone",
-                "onyx", "amethyst", "broad");
-    }
-    private static int multiply(int a, int b)
-    {
-        return a > Integer.MAX_VALUE / b ? Integer.MAX_VALUE : a * b;
-    }
-    private static int ceil(int value, int divisor)
-    {
-        return (value + divisor - 1) / divisor;
-    }
-    private static String capitalize(String value)
-    {
-        return value == null || value.isEmpty() ? "Dragon"
-                : Character.toUpperCase(value.charAt(0)) + value.substring(1);
-    }
-    private static String firstWord(String value)
-    {
-        var space = value.indexOf(' ');
-        return space < 0 ? value : value.substring(0, space);
-    }
-
-    private static final class Recipe
-    {
-        private String skill, match, setup;
-        private String[] inputs;
-        private int[] units;
-        private boolean contains;
-
-        private UniversalActionRecipe build(int count)
-        {
-            List<MethodInput> result = new ArrayList<>();
-            for (int i = 0; i < inputs.length; i++)
-                result.add(new MethodInput(inputs[i], -1,
-                        multiply(count, units[i])));
-            return new UniversalActionRecipe(result, setup, true);
-        }
     }
 }

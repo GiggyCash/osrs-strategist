@@ -87,6 +87,29 @@ public class AdaptiveActionSelectorTest
         assertEquals("Yew longbow (u)", selected.getName());
     }
 
+    @Test
+    public void f2pFiremakingProfileCannotSelectPyreOrInventedLogs()
+    {
+        MethodProfile firemaking = new MethodExecutionProfileCatalog()
+                .forMethod("firemaking_f2p_logs");
+        List<ActionDef> candidates = Arrays.asList(
+                new ActionDef(Skill.FIREMAKING,
+                        "runelite:firemaking:logs", "Logs", 1, 40,
+                        null, Membership.F2P, 1511),
+                new ActionDef(Skill.FIREMAKING,
+                        "runelite:firemaking:oak_pyre_logs", "Oak pyre logs",
+                        35, 500, null, Membership.P2P, 3440),
+                new ActionDef(Skill.FIREMAKING,
+                        "runelite:firemaking:future_logs", "Future logs",
+                        1, 1000, null, Membership.P2P, -1));
+
+        ActionDef selected = selector.select(
+                GameData.builder(account(0)).build(), firemaking, candidates,
+                99, Membership.P2P, 0, 10000, 1.0, false);
+
+        assertEquals("Logs", selected.getName());
+    }
+
     private static List<ActionDef> actions()
     {
         return Arrays.asList(

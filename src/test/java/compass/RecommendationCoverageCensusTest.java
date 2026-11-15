@@ -215,6 +215,19 @@ public class RecommendationCoverageCensusTest
             System.out.println("COVERAGE_PREPARED " + skill.getName() + " "
                     + executable.getOrDefault(skill, 0) + "/" + possible);
         }
+        for (Skill skill : EnumSet.of(
+                Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE))
+        {
+            assertEquals(skill.getName() + " prepared melee coverage",
+                    eligible.getOrDefault(skill, 0),
+                    executable.getOrDefault(skill, 0));
+        }
+        assertEquals("Prepared Mining should select a concrete route",
+                eligible.getOrDefault(Skill.MINING, 0),
+                executable.getOrDefault(Skill.MINING, 0));
+        assertEquals("Prepared Woodcutting should select a concrete route",
+                eligible.getOrDefault(Skill.WOODCUTTING, 0),
+                executable.getOrDefault(Skill.WOODCUTTING, 0));
         assertTrue(executable.getOrDefault(Skill.RANGED, 0) > 0);
         assertTrue(executable.getOrDefault(Skill.RUNECRAFT, 0) > 0);
     }
@@ -244,7 +257,7 @@ public class RecommendationCoverageCensusTest
                     0, count(prepared, skill, CoverageClass.RECOVERY));
         }
         for (Skill skill : EnumSet.of(
-                Skill.COOKING, Skill.FISHING, Skill.RUNECRAFT,
+                Skill.FISHING, Skill.RUNECRAFT,
                 Skill.FARMING, Skill.HUNTER))
         {
             assertEquals(skill.getName() + " observed-empty recovery debt",
@@ -252,6 +265,60 @@ public class RecommendationCoverageCensusTest
         }
         assertTrue("Unknown spellbook must leave observed-empty Magic gated",
                 count(observed, Skill.MAGIC, CoverageClass.RECOVERY) > 0);
+        assertTrue("Empty Cooking stock without a verified acquisition path must stay unresolved",
+                count(observed, Skill.COOKING, CoverageClass.RECOVERY) > 0);
+    }
+
+    @Test
+    public void remainingPreparedResourceDebtIsConfinedToUim()
+    {
+        EnumSet<Skill> resourceBound = EnumSet.of(
+                Skill.PRAYER, Skill.FIREMAKING, Skill.SMITHING,
+                Skill.FLETCHING, Skill.HERBLORE);
+        Map<Skill, Integer> total = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> uim = new EnumMap<>(Skill.class);
+        ActionabilityPolicy policy = new ActionabilityPolicy();
+        for (Scenario account : ACCOUNTS)
+        {
+            RecommendationEngine engine = recommendationEngine(
+                    account.membership);
+            StrategyEngine strategy = TestFixtures.strategyEngine(
+                    engine, null, null, null, policy,
+                    new RecommendationIntelligenceService());
+            for (int level : LEVELS)
+            {
+                GameData data = data(account, level, true);
+                for (StrategyMode mode : MODES)
+                {
+                    for (SessionIntent session : SESSIONS)
+                    {
+                        List<Recommendation> candidates = engine.recommendAll(
+                                data, mode, session, true, false,
+                                GoalType.AUTOMATIC, new PreferenceProfile());
+                        Recommendation recovery = strategy.evaluate(
+                                data, mode, session,
+                                new PreferenceProfile())
+                                .getRecommendations().get(0);
+                        for (Skill skill : resourceBound)
+                        {
+                            if (!ContentAccessRules.isSkillAvailable(
+                                    skill, account.membership))
+                                continue;
+                            if (classify(skill, candidateFor(candidates, skill),
+                                    recovery, policy) != CoverageClass.RECOVERY)
+                                continue;
+                            total.merge(skill, 1, Integer::sum);
+                            if (account.type == 2)
+                                uim.merge(skill, 1, Integer::sum);
+                        }
+                    }
+                }
+            }
+        }
+        for (Skill skill : resourceBound)
+            assertEquals(skill.getName() + " non-UIM prepared debt",
+                    total.getOrDefault(skill, 0),
+                    uim.getOrDefault(skill, 0));
     }
 
     @Test
@@ -329,9 +396,10 @@ public class RecommendationCoverageCensusTest
     public void priorityCoverageDebtRemainsVisibleBySelectedMethod()
     {
         EnumSet<Skill> priority = EnumSet.of(
-                Skill.COOKING, Skill.MAGIC, Skill.FISHING, Skill.RUNECRAFT,
+                Skill.COOKING, Skill.HERBLORE, Skill.MAGIC,
+                Skill.FISHING, Skill.RUNECRAFT, Skill.WOODCUTTING,
                 Skill.CONSTRUCTION, Skill.FARMING, Skill.HUNTER,
-                Skill.SMITHING, Skill.SAILING,
+                Skill.MINING, Skill.SMITHING, Skill.SAILING,
                 Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE);
         ActionabilityPolicy policy =
                 new ActionabilityPolicy();
@@ -748,7 +816,7 @@ public class RecommendationCoverageCensusTest
                 // Census scenarios model a complete live container, including
                 // the observed-empty case. UIM generation must not confuse it
                 // with a persisted list whose slot completeness is unknown.
-                .inventory(new ItemsState(items, true))
+                .inventory(new ItemsState(scenario.type == 2 ? items : Collections.emptyList(), true))
                 .equipment(new ItemsState(Collections.emptyList()));
         if (prepared)
         {
@@ -789,7 +857,7 @@ public class RecommendationCoverageCensusTest
         }
         if (scenario.type != 2)
         {
-            builder.bank(new ItemsState(Collections.emptyList(), 1L));
+            builder.bank(new ItemsState(items, 1L));
         }
         return builder.build();
     }
@@ -797,6 +865,7 @@ public class RecommendationCoverageCensusTest
     private static List<ItemState> preparedItems()
     {
         List<ItemState> items = new ArrayList<>();
+        items.add(item(ItemID.RAW_SHRIMP, "Raw shrimps", 100));
         items.add(item(ItemID.BRONZE_PICKAXE, "Bronze pickaxe", 1));
         items.add(item(ItemID.BRONZE_AXE, "Bronze axe", 1));
         items.add(item(ItemID.BRONZE_SCIMITAR, "Bronze scimitar", 1));
@@ -844,7 +913,7 @@ public class RecommendationCoverageCensusTest
     /**
      * A physically possible broad UIM setup for coverage testing. It carries
      * the core tools/inputs used by the asserted families and intentionally
-     * leaves seven slots free; the ordinary-account omnibus fixture has more
+     * leaves three slots free; the ordinary-account omnibus fixture has more
      * than 28 distinct stacks and must never masquerade as a UIM inventory.
      */
     private static List<ItemState> uimPreparedItems()
@@ -852,10 +921,11 @@ public class RecommendationCoverageCensusTest
         List<ItemState> items = new ArrayList<>();
         items.add(item(ItemID.BRONZE_PICKAXE, "Bronze pickaxe", 1));
         items.add(item(ItemID.BRONZE_AXE, "Bronze axe", 1));
+        items.add(item(ItemID.BRONZE_SCIMITAR, "Bronze scimitar", 1));
         items.add(item(ItemID.SHORTBOW, "Shortbow", 1));
         items.add(item(ItemID.BRONZE_ARROW, "Bronze arrow", 10_000));
         items.add(item(ItemID.NET, "Small fishing net", 1));
-        items.add(item(ItemID.RAW_SALMON, "Raw salmon", 10_000));
+        items.addAll(MethodIntelligenceTest.carried(ItemID.RAW_SHRIMP, "Raw shrimps", 4));
         items.add(item(ItemID.HAMMER, "Hammer", 1));
         items.add(item(ItemID.POH_SAW, "Saw", 1));
         items.add(item(ItemID.WOODPLANK, "Plank", 10_000));
@@ -871,6 +941,7 @@ public class RecommendationCoverageCensusTest
         items.add(item(ItemID.RAKE, "Rake", 1));
         items.add(item(ItemID.DIBBER, "Seed dibber", 1));
         items.add(item(ItemID.SPADE, "Spade", 1));
+        assertEquals("Prepared UIM fixture occupied slots", 25, items.size());
         for (int slot = 0; slot < items.size(); slot++)
         {
             ItemState item = items.get(slot);

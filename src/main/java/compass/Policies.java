@@ -369,6 +369,7 @@ final class AccountModePolicy
 @Singleton
 class ActionabilityPolicy
 {
+    private static final MethodIntelligenceCatalog METHOD_CONTRACTS = new MethodIntelligenceCatalog();
     private final RecommendationQualityPolicy qualityPolicy =
             new RecommendationQualityPolicy();
 
@@ -403,6 +404,10 @@ class ActionabilityPolicy
         {
             return false;
         }
+
+        if (METHOD_CONTRACTS.method(plan.method().id) != null)
+            return plan.readiness != null && plan.readiness.actionable()
+                    && !RequirementActionability.hasHardUnresolvedRequirement(plan);
 
         if (recommendation.confidence == Confidence.VERIFIED)
         {
@@ -455,9 +460,17 @@ class ActionabilityPolicy
         String id = recommendation == null || recommendation.id == null
                 ? "" : recommendation.id.toLowerCase(
                         Locale.ROOT);
-        return id.startsWith("prepare:")
+        if (id.startsWith("prepare:")
                 || id.startsWith("preparation:")
-                || id.startsWith("verify:");
+                || id.startsWith("verify:")) return true;
+        if (!id.startsWith("quest:") || recommendation.guidance == null)
+            return false;
+        String action = recommendation.guidance.getAction();
+        if (!hasText(action)) return false;
+        String normalized = action.trim().toLowerCase(Locale.ROOT);
+        return normalized.startsWith("equip ")
+                || normalized.startsWith("obtain ")
+                || normalized.startsWith("verify ownership of ");
     }
 }
 
@@ -514,15 +527,16 @@ class CandidateSafetyPolicy
         }
 
         var mode = AccountMode.fromTypeCode(account.modeCode());
-        if ((mode == AccountMode.HARDCORE_IRONMAN
+        if ((mode == AccountMode.UNKNOWN
+                || mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
                 && (evidence.getBuildEffect()
                 == Safety.BuildEffect.POTENTIALLY_IRREVERSIBLE
                 || evidence.getBuildEffect()
                 == Safety.BuildEffect.UNKNOWN))
         {
-            // When the candidate cannot prove its risk/build effects, preserving
-            // a Hardcore life takes precedence over provider score.
+            // When the account mode or candidate risk is unknown, preserving
+            // a possible Hardcore life takes precedence over provider score.
             return false;
         }
 
@@ -842,6 +856,15 @@ class TrainingMethodPolicy
             if (metadata.riskLevel == RiskLevel.HIGH) score -= 10.0;
         }
         return score;
+    }
+
+    /** Applies shared bounded value weights to reviewed recipe facts. */
+    double economicScore(MethodIntelligenceCatalog.Economics economics)
+    {
+        if (economics == null) return 0;
+        return StrategicValue.builder().resourceFit(economics.resourceFit)
+                .opportunityCost(economics.opportunityCost)
+                .evidenceIds(economics.evidence).build().scoreDelta();
     }
 
     private static double intensityAdjustment(

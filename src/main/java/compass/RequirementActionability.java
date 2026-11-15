@@ -29,6 +29,7 @@ public final class RequirementActionability
         }
 
         var checks = plan.requirementChecks;
+        if (plan.readiness != null && !plan.readiness.actionable()) return false;
         if (checks == null || checks.isEmpty()) return true;
 
         var hasPreparation = false;
@@ -48,6 +49,7 @@ public final class RequirementActionability
 
     public static boolean hasHardUnresolvedRequirement(TrainingPlan plan)
     {
+        if (plan != null && plan.readiness != null && !plan.readiness.actionable()) return true;
         if (plan == null || plan.requirementChecks == null) return false;
         for (EvidenceCheck check : plan.requirementChecks)
         {

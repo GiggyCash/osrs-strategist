@@ -3,6 +3,7 @@ package compass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,6 +19,85 @@ import org.junit.Test;
 /** Cross-seam tests for typed value attachment and provider ownership. */
 public class StrategyValueIntegrationTest
 {
+    @Test
+    public void differentRoutesToSameLevelCompeteWithoutBorrowingValueOrGuidance()
+    {
+        Recommendation ordinary = recommendation("skill:ordinary", method("route:ordinary", Skill.FARMING), 70, 75);
+        Guidance chosenGuidance = new Guidance("Use the valuable route", "Its own supplies", "Its own location", "Verified");
+        Recommendation valuable = recommendation("skill:valuable", method("route:valuable", Skill.FARMING), 70, 75)
+                .withGuidance(chosenGuidance)
+                .withStrategicValue(StrategicValue.builder().unlockValue(1).evidence("route:valuable").build());
+        RecommendationDeduplicator deduplicator = new RecommendationDeduplicator();
+        assertEquals(deduplicator.semanticKey(ordinary), deduplicator.semanticKey(valuable));
+        assertEquals(2, deduplicator.deduplicate(Arrays.asList(ordinary, valuable)).size());
+        StrategyContext context = context(account("MAIN"), GameData.builder(account("MAIN")).build());
+        for (List<Recommendation> pool : Arrays.asList(Arrays.asList(ordinary, valuable), Arrays.asList(valuable, ordinary)))
+        {
+            List<Recommendation> queue = engine(null, null).buildPlayerQueue(pool, context);
+            assertEquals(1, queue.size());
+            assertEquals(valuable.id, queue.get(0).id);
+            assertSame(chosenGuidance, queue.get(0).guidance);
+            assertSame(valuable.plan(), queue.get(0).plan());
+            assertEquals(valuable.score, queue.get(0).score, 0);
+        }
+    }
+
+    @Test
+    public void unsafeDuplicateCannotEraseASafeExecutableCandidate()
+    {
+        Recommendation valid = ready("candidate:valid", 50, StrategicValue.neutral());
+        Recommendation unsafe = new Recommendation("candidate:unsafe", valid.title, "Unsafe duplicate", 500,
+                Confidence.VERIFIED, guidance(), Safety.unknown());
+        AccountSnapshot hardcore = account(3, "HARDCORE_IRONMAN", null, 70);
+        StrategyContext context = context(hardcore, GameData.builder(hardcore).build());
+        List<Recommendation> queue = engine(null, null).buildPlayerQueue(Arrays.asList(unsafe, valid), context);
+        assertEquals(1, queue.size());
+        assertEquals(valid.id, queue.get(0).id);
+    }
+
+    @Test
+    public void nonFiniteScoresCannotPoisonDuplicatesOrLeadTheFinalQueue()
+    {
+        Recommendation valid = ready("candidate:valid", 50, StrategicValue.neutral());
+        StrategyContext context = context(account("MAIN"), GameData.builder(account("MAIN")).build());
+        for (double score : new double[] {Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY})
+        {
+            Recommendation duplicate = new Recommendation("candidate:invalid", valid.title, "Invalid score", score,
+                    Confidence.VERIFIED, guidance(), Safety.verifiedSafe(false));
+            List<Recommendation> queue = engine(null, null).buildPlayerQueue(Arrays.asList(duplicate, valid), context);
+            assertEquals(1, queue.size());
+            assertEquals(valid.id, queue.get(0).id);
+            assertTrue(Double.isFinite(queue.get(0).score));
+        }
+        Recommendation invalidValue = ready("candidate:invalid-value", 100,
+                StrategicValue.builder().resourceFit(Double.NaN).evidence("test:invalid").build());
+        assertEquals(valid.id, engine(null, null).buildPlayerQueue(Arrays.asList(invalidValue, valid), context).get(0).id);
+        assertTrue(engine(null, null).buildPlayerQueue(Collections.singletonList(invalidValue), context).isEmpty());
+    }
+
+    @Test
+    public void travelAttachmentPreservesProgressStorageRiskAndGuidanceValue()
+    {
+        UimStorageDecision storage = new UimStorageDecision(StorageKind.DEATH_STORAGE,
+                false, Confidence.CHECK_NEEDED, RiskLevel.HIGH, "Unresolved retrieval");
+        RecommendationRiskDisclosure risk = RecommendationRiskDisclosure.deathStorage();
+        StrategicValue value = StrategicValue.builder().resourceFit(0.5).evidence("test:resource").build();
+        Guidance guidance = new Guidance("Prepare safely", "Observed supplies", "Original location", "Keep this note",
+                BankingMode.UNKNOWN, storage, risk).withProgress("Level 27 to 33").withStrategicValue(value);
+        Recommendation original = recommendation("skill:farming", method("farming_fruit_trees", Skill.FARMING), 27, 33)
+                .withGuidance(guidance);
+        GameData data = GameData.builder(account("MAIN")).build();
+        Guidance attached = new MethodRecommendationValueService().attach(original, context(data.account(), data)).guidance;
+        assertEquals(guidance.progress, attached.progress);
+        assertEquals(guidance.action, attached.action);
+        assertEquals(guidance.supplies, attached.supplies);
+        assertSame(storage, attached.storageDecision);
+        assertSame(risk, attached.riskDisclosure);
+        assertSame(value, attached.strategicValue);
+        assertTrue(attached.note.startsWith("Keep this note"));
+        assertFalse(attached.location.equals(guidance.location));
+    }
+
     @Test
     public void methodTravelEvidenceChangesRenderedLocationAndTypedValue()
     {
@@ -187,7 +267,7 @@ public class StrategyValueIntegrationTest
         TrainingPlan plan = new TrainingPlan(method, "test",
                 Confidence.VERIFIED,
                 Collections.emptyList());
-        return new Recommendation(id, "Train Farming", "Test.", 40.0,
+        return new Recommendation(id, "Train Farming to " + target, "Test.", 40.0,
                 plan, Confidence.VERIFIED, current, target,
                 guidance(), Safety.skill(false,
                         method.getSkill()));

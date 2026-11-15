@@ -20,6 +20,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:4.11.0'
     testImplementation group: 'net.runelite', name: 'client', version: runeLiteVersion
     testImplementation group: 'net.runelite', name: 'jshell', version: runeLiteVersion
 }
@@ -31,24 +32,6 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     options.release.set(11)
     options.compilerArgs += ['-Xlint:deprecation', '-Xlint:unchecked']
-}
-
-def catalogGsonTestAgent = tasks.register('catalogGsonTestAgent', Jar) {
-    dependsOn testClasses
-    archiveFileName = 'catalog-gson-test-agent.jar'
-    destinationDirectory = layout.buildDirectory.dir('test-agent')
-    from(sourceSets.test.output) {
-        include 'compass/CatalogGsonTestAgent.class'
-    }
-    manifest {
-        attributes 'Premain-Class': 'compass.CatalogGsonTestAgent'
-    }
-}
-
-test {
-    dependsOn catalogGsonTestAgent
-    jvmArgs "-javaagent:${layout.buildDirectory.file(
-            'test-agent/catalog-gson-test-agent.jar').get().asFile}"
 }
 
 tasks.register('run', JavaExec) {

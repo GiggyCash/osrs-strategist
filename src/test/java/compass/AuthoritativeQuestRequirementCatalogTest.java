@@ -31,11 +31,2668 @@ public class AuthoritativeQuestRequirementCatalogTest
                 .definitionFor("The Blood Moon Rises");
         assertEquals(Integer.valueOf(74),
                 bloodMoon.getSkillRequirements().get(Skill.SLAYER));
+        assertEquals(10, bloodMoon.getSkillRequirements().size());
+        assertEquals(10, bloodMoon.getPrerequisites().size());
         assertTrue(bloodMoon.getPrerequisites().contains("Sins of the Father"));
         assertFalse(bloodMoon.hasFieldUncertainty());
         assertFalse(bloodMoon.getStartLocation().isEmpty());
+        ItemRule preparation = bloodMoon.getItemRequirementExpression();
+        assertEquals(ItemRule.Kind.ALL_OF, preparation.getKind());
+        assertEquals(2, preparation.getChildren().size());
+        assertEquals(ItemRule.Kind.ANY_OF,
+                preparation.getChildren().get(0).getKind());
+        assertEquals("Blisterwood flail", preparation.getChildren().get(0)
+                .getChildren().get(0).getItemNames().get(0));
+        assertEquals(40000, preparation.getChildren().get(0)
+                .getChildren().get(1).getQuantity());
+        assertEquals(ItemRequirementClass.PICKAXE,
+                preparation.getChildren().get(1).getChildren().get(0)
+                        .getItemClass());
+        assertTrue(preparation.getChildren().get(1).getChildren().get(1)
+                .getCheckAction().contains("Ivan Strom"));
+        assertEquals(3, bloodMoon.getAccessChecks().size());
         assertTrue(bloodMoon.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Required items:")));
+                check -> check.contains("vyre noble clothing free")
+                        && check.contains("Old Man Ral's house")));
+        assertTrue(bloodMoon.getAccessChecks().stream().anyMatch(
+                check -> check.contains("tinderbox, hammer, knife, chisel")
+                        && check.contains("blisterwood logs")));
+        assertTrue(bloodMoon.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Wyrd (level 564)")
+                        && check.contains("Lowerniel Drakan (level 1063)")
+                        && check.contains("across four fights")));
+        assertFalse(bloodMoon.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void whileGuthixSleepsKeepsCompletionRequirementsConcise()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("While Guthix Sleeps");
+        assertEquals(Integer.valueOf(49),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertTrue(quest.getAccessChecks().contains(
+                "Verify Warriors' Guild access: Attack plus Strength totals "
+                        + "at least 130, or either skill is 99"));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void swanSongKeepsCombatEvidenceWithoutDuplicatingTypedAccess()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Swan Song");
+        assertEquals(100, quest.getQuestPointsRequired());
+        assertEquals(Integer.valueOf(66),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Sea Troll Queen (level 170)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void fremennikExilesPromotesSourceRequirementsIntoTypedGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Fremennik Exiles");
+        assertEquals(4, quest.getPrerequisites().size());
+        assertTrue(quest.getPrerequisites().containsAll(java.util.Arrays.asList(
+                "The Fremennik Isles", "Lunar Diplomacy",
+                "Mountain Daughter", "Heroes' Quest")));
+        assertEquals(6, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(65),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(60),
+                quest.getSkillRequirements().get(Skill.SLAYER));
+        assertEquals(Integer.valueOf(60),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(Integer.valueOf(60),
+                quest.getSkillRequirements().get(Skill.FISHING));
+        assertEquals(Integer.valueOf(55),
+                quest.getSkillRequirements().get(Skill.RUNECRAFT));
+        assertEquals(Integer.valueOf(60),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain combat equipment, a mirror shield, two kegs of beer"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "buy the beer from Thora the Barkeep before starting"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "Fremennik shield—not a Neitiznot shield"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "for 150,000 coins or free with a Ring of Charos(a)"));
+        assertTrue(quest.getAccessChecks().get(2).contains(
+                "three Lunar bars or a pickaxe to mine three Lunar ores"));
+        assertTrue(quest.getAccessChecks().get(2).contains(
+                "60 Mining is boostable and not required to start"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("The Jormungand (level 363)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void pathOfGlouphriePromotesSourceRequirementsIntoTypedGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Path of Glouphrie");
+        assertEquals(3, quest.getPrerequisites().size());
+        assertTrue(quest.getPrerequisites().containsAll(java.util.Arrays.asList(
+                "The Eyes of Glouphrie", "Waterfall Quest",
+                "Tree Gnome Village")));
+        assertEquals(5, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(60),
+                quest.getSkillRequirements().get(Skill.STRENGTH));
+        assertEquals(Integer.valueOf(56),
+                quest.getSkillRequirements().get(Skill.SLAYER));
+        assertEquals(Integer.valueOf(56),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertEquals(Integer.valueOf(47),
+                quest.getSkillRequirements().get(Skill.RANGED));
+        assertEquals(Integer.valueOf(45),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("all five are non-boostable")
+                        && check.contains("required to start")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Tree Gnome Village Dungeon key")
+                        && check.contains("unless you have started Roving Elves")
+                        && check.contains("obtainable during the quest")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("mith grapple")
+                        && check.contains("any crossbow")
+                        && check.contains("combat equipment")
+                        && check.contains("food")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("3 Warped Terrorbirds (level 138)")
+                        && check.contains("Evil Creature (level 1)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void tearsOfGuthixPromotesCompletionSkillsIntoTypedGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Tears of Guthix");
+        assertEquals(43, quest.getQuestPointsRequired());
+        assertEquals(Integer.valueOf(49),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertTrue(quest.getAccessChecks().contains(
+                "Use a lit sapphire lantern and a safe light-source route "
+                        + "through Lumbridge Swamp Caves"));
+    }
+
+    @Test
+    public void gettingAheadPromotesMandatoryStartSkillsIntoTypedGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Getting Ahead");
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(26),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Headless Beast (level 82)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void ethicallyAcquiredAntiquitiesPromotesCompleteStartContract()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Ethically Acquired Antiquities");
+        assertEquals(2, quest.getPrerequisites().size());
+        assertTrue(quest.getPrerequisites().containsAll(java.util.Arrays.asList(
+                "Children of the Sun", "Shield of Arrav")));
+        assertEquals(Integer.valueOf(25),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertTrue(quest.getAccessChecks().isEmpty());
+    }
+
+    @Test
+    public void familyCrestUsesConcretePreparationWithoutDuplicateSkillDump()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Family Crest");
+        assertEquals(4, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(59),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain shrimps, salmon, tuna, bass, swordfish"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Chronozon (level 170)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void giantDwarfKeepsVariableCompanyTaskActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Giant Dwarf");
+        assertEquals(4, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(33),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertEquals(1, quest.getAccessChecks().size());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain 200 coins"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "after choosing a company, source its assigned ores and bars"));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void wantedUsesDirectGraphAndAlternativePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Wanted!");
+        assertEquals(4, quest.getPrerequisites().size());
+        assertEquals(32, quest.getQuestPointsRequired());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain either 10,000 coins or"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "20 unnoted rune or pure essence at once"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Black Knight (level 32)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void defenderOfVarrockUsesDirectGraphAndConcretePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Defender of Varrock");
+        assertEquals(8, quest.getPrerequisites().size());
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(55),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a barronite deposit"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("armoured zombies (level 85)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void gardenOfTranquillityRestoresCompletePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Garden of Tranquillity");
+        assertEquals(java.util.Collections.singletonList(
+                "Creature of Fenkenstrain"), quest.getPrerequisites());
+        assertEquals(Integer.valueOf(25),
+                quest.getSkillRequirements().get(Skill.FARMING));
+        assertEquals(1, quest.getAccessChecks().size());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a ring of Charos"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "pestle and mortar, filled plant pot"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "bottomless compost bucket does not work"));
+        assertFalse(quest.getAccessChecks().get(0).contains("…"));
+    }
+
+    @Test
+    public void legendsQuestRestoresCompletePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Legends' Quest");
+        assertEquals(5, quest.getPrerequisites().size());
+        assertEquals(10, quest.getSkillRequirements().size());
+        assertEquals(107, quest.getQuestPointsRequired());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain two gold bars"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "standard-spellbook runes for one Charge Orb cast"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "the long path requires a second Charge Orb cast"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Nezikchened (level 187)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void princeAliRescueKeepsAlternativesAndOptionalCombat()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Prince Ali Rescue");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain soft clay, three balls of wool"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "yellow dye or two onions and 5 coins"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Jail guard (level 26, optional)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void nightAtTheTheatreKeepsEncounterSafetyExplicit()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("A Night at the Theatre");
+        assertEquals(java.util.Collections.singletonList("A Taste of Hope"),
+                quest.getPrerequisites());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain an Ivandis or Blisterwood flail"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Hespori (Level 302)")
+                        && check.contains("optional, if a kill count")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void anotherSliceOfHamKeepsCombatStyleConstraint()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Another Slice of H.A.M.");
+        assertEquals(3, quest.getPrerequisites().size());
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(25),
+                quest.getSkillRequirements().get(Skill.PRAYER));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a light source and Magic or Ranged combat gear"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "cannot be fought with Melee"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Sigmund (level 64)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void eaglesPeakKeepsOptionalCombatSeparate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Eagles' Peak");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(Integer.valueOf(27),
+                quest.getSkillRequirements().get(Skill.HUNTER));
+        assertEquals("Obtain yellow dye, swamp tar, and 50 coins",
+                quest.getAccessChecks().get(0));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Kebbit (level 13) (optional)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void enlightenedJourneyRestoresBothTripSetups()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Enlightened Journey");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(3, quest.getSkillRequirements().size());
+        assertEquals(20, quest.getQuestPointsRequired());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain for Trip 1"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "For Trip 2 obtain at least ten normal logs"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "only if growing the quest-provided willow sapling"));
+        assertFalse(quest.getAccessChecks().get(0).contains("…"));
+    }
+
+    @Test
+    public void makingFriendsWithMyArmKeepsConditionalPreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Making Friends with My Arm");
+        assertEquals(4, quest.getPrerequisites().size());
+        assertEquals(4, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(66),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a saw, bolt of cloth, five mahogany planks"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "climbing boots unless using Trollheim teleports"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "Agility above 68 is beneficial"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Mother (level 198)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void mountainDaughterKeepsConditionalPreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Mountain Daughter");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a rope, pickaxe, axe, plank"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "Dramen staff does not work"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "boostable and not required to start"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("The Kendal (level 70)")
+                        && check.contains("can be safespotted")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Required items:")
+                        || check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void anotherCooksQuestKeepsConcretePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Another Cook's Quest");
+        assertEquals(java.util.Collections.singletonList("Cook's Assistant"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(10),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertEquals(1, quest.getAccessChecks().size());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain an eye of newt, Greenman's ale"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "any fruit blast except a premade fr' blast"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "10 Cooking is not boostable"));
+    }
+
+    @Test
+    public void piratePeteDoesNotTurnItemUseIntoSkillGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Pirate Pete");
+        assertEquals(java.util.Collections.singletonList(
+                "Recipe for Disaster - Another Cook's Quest"),
+                quest.getPrerequisites());
+        assertEquals(1, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(31),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertFalse(quest.getSkillRequirements().containsKey(Skill.CRAFTING));
+        assertFalse(quest.getSkillRequirements().containsKey(Skill.SMITHING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain at least three raw cod and three bread"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "fishcakes can burn"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "31 Cooking is boostable"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("5 Mudskippers (level 30/31)")
+                        && check.contains("Crab (level 21/23)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void kingAwowogeiKeepsDirectGraphAndAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - King Awowogei");
+        assertEquals(java.util.Arrays.asList(
+                "Monkey Madness I",
+                "Recipe for Disaster - Another Cook's Quest"),
+                quest.getPrerequisites());
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(70),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertEquals(Integer.valueOf(48),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain an M'speak amulet"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "or 3,000 coins for three monkey talismans"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "70 Cooking is boostable"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "neither skill requirement is needed to start"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Big Snake (level 84)")
+                        && check.contains("Monkey guard (level 167)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void skrachUglogweeKeepsAcquisitionAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Skrach Uglogwee");
+        assertEquals(java.util.Arrays.asList(
+                "Big Chompy Bird Hunting",
+                "Recipe for Disaster - Another Cook's Quest"),
+                quest.getPrerequisites());
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(41),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a non-blessed axe"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "bought from Rantz for at most 600 coins"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "Brutal arrows work with a comp ogre bow"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "both skill requirements are boostable and not needed to start"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Jubbly bird (Level 11)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void lumbridgeGuideKeepsDirectGraphAndTravelAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Lumbridge Guide");
+        assertEquals(7, quest.getPrerequisites().size());
+        assertTrue(quest.getPrerequisites().containsAll(java.util.Arrays.asList(
+                "Big Chompy Bird Hunting", "Biohazard", "Demon Slayer",
+                "Murder Mystery", "Nature Spirit",
+                "Recipe for Disaster - Another Cook's Quest",
+                "Witch's House")));
+        assertFalse(quest.getPrerequisites().contains("Plague City"));
+        assertFalse(quest.getPrerequisites().contains("Priest in Peril"));
+        assertFalse(quest.getPrerequisites().contains("The Restless Ghost"));
+        assertFalse(quest.getPrerequisites().contains("Cook's Assistant"));
+        assertEquals(Integer.valueOf(40),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertEquals(1, quest.getAccessChecks().size());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a bucket of milk, egg, pot of flour, and cake tin"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "40 Cooking is boostable but required to start"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "fairy ring D I S with a Lunar or Dramen staff"));
+    }
+
+    @Test
+    public void evilDaveDoesNotTurnStewIntoACookingGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Evil Dave");
+        assertEquals(java.util.Arrays.asList(
+                "Gertrude's Cat",
+                "Recipe for Disaster - Another Cook's Quest",
+                "Shadow of the Storm"), quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Cook's Assistant"));
+        assertFalse(quest.getPrerequisites().contains("Demon Slayer"));
+        assertFalse(quest.getPrerequisites().contains("The Golem"));
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(1, quest.getAccessChecks().size());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain any cat except an overgrown cat"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "up to nine bowls of stew"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "kittens and lazy cats are not recommended"));
+    }
+
+    @Test
+    public void goblinGeneralsKeepIngredientAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Wartface & Bentnoze");
+        assertEquals(java.util.Arrays.asList(
+                "Goblin Diplomacy",
+                "Recipe for Disaster - Another Cook's Quest"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Cook's Assistant"));
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(1, quest.getAccessChecks().size());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain bread, orange slices or an orange and knife"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "blue, black, green, or purple dye"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "spice is available at Ardougne market"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "charcoal is sold in Shilo Village"));
+    }
+
+    @Test
+    public void mountainDwarfRestoresTruncatedPreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Mountain Dwarf");
+        assertEquals(java.util.Arrays.asList(
+                "Fishing Contest",
+                "Recipe for Disaster - Another Cook's Quest"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Cook's Assistant"));
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a bucket of milk, pot of flour, egg, bowl of water"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "two extra ales and two extra coins"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "falls to 100 with a Ring of Charos(a) or 150 with a chocolate bar"));
+        assertTrue(quest.getAccessChecks().get(1).startsWith(
+                "Obtain gloves or Telekinetic Grab runes"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Icefiend (level 13)")
+                        && check.contains("only if you lack ice gloves")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void sirAmikSeparatesStartedQuestAndDirectCompletions()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Sir Amik Varze");
+        assertEquals(java.util.Arrays.asList(
+                "Family Crest", "Heroes' Quest",
+                "Recipe for Disaster - Another Cook's Quest",
+                "Shilo Village", "Underground Pass", "Waterfall Quest"),
+                quest.getPrerequisites());
+        assertEquals(java.util.Collections.singletonList("Legends' Quest"),
+                quest.getStartedPrerequisites());
+        assertEquals(107, quest.getQuestPointsRequired());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a bucket of milk or Bottomless milk bucket"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "without 20 Farming"));
+        assertTrue(quest.getAccessChecks().get(1).startsWith(
+                "Obtain a Dramen or Lunar staff"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "anti-dragon shield mitigates most damage to under 10"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Black dragon (level 227)")
+                        && check.contains("Evil Chicken (level varies)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void culinaromancerKeepsDirectFinaleReadiness()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Culinaromancer");
+        assertEquals(10, quest.getPrerequisites().size());
+        assertTrue(quest.getPrerequisites().containsAll(java.util.Arrays.asList(
+                "Desert Treasure I", "Horror from the Deep",
+                "Recipe for Disaster - Mountain Dwarf",
+                "Recipe for Disaster - Wartface & Bentnoze",
+                "Recipe for Disaster - Pirate Pete",
+                "Recipe for Disaster - Lumbridge Guide",
+                "Recipe for Disaster - Evil Dave",
+                "Recipe for Disaster - Skrach Uglogwee",
+                "Recipe for Disaster - Sir Amik Varze",
+                "Recipe for Disaster - King Awowogei")));
+        assertEquals(175, quest.getQuestPointsRequired());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain ice gloves for Flambeed"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "Menaphite remedy or restore potions for Karamel"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "defeat every boss without Prayer"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Agrith-Na-Na (level 146)")
+                        && check.contains("Culinaromancer (level 75)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void recipeForDisasterWrapperDelegatesToReviewedFinaleGraph()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster");
+        assertEquals(java.util.Collections.singletonList(
+                "Recipe for Disaster - Culinaromancer"),
+                quest.getPrerequisites());
+        assertTrue(quest.getStartedPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(0, quest.getQuestPointsRequired());
+        assertTrue(quest.getItemRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().isEmpty());
+    }
+
+    @Test
+    public void whileGuthixSleepsRestoresTruncatedPreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("While Guthix Sleeps");
+        assertEquals(10, quest.getPrerequisites().size());
+        assertEquals(7, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(72),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertEquals(Integer.valueOf(49),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertEquals(180, quest.getQuestPointsRequired());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a Ring of Charos(a) or 500 coins"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "four Astral Contact casts"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "Snare or Entangle, Weaken or Enfeeble"));
+        assertTrue(quest.getAccessChecks().get(2).startsWith(
+                "Obtain during the quest mort myre fungus"));
+        assertTrue(quest.getAccessChecks().get(2).contains(
+                "carried Zombie axe blocks that option"));
+        assertEquals("Verify Warriors' Guild access: Attack plus Strength "
+                        + "totals at least 130, or either skill is 99",
+                quest.getAccessChecks().get(3));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Balance Elemental (level 524)")
+                        && check.contains("2 Tormented Demons (level 450)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void swanSongRestoresTruncatedPreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Swan Song");
+        assertEquals(java.util.Arrays.asList(
+                "Garden of Tranquillity", "One Small Favour"),
+                quest.getPrerequisites());
+        assertEquals(6, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(66),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertEquals(Integer.valueOf(40),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(100, quest.getQuestPointsRequired());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain 10 mist runes, 10 lava runes, 5 blood runes"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "all six skill requirements are boostable and not needed to start"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "five iron bars or mine them during the quest"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "small fishing net, and brown apron are obtainable"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("11 Sea trolls")
+                        && check.contains("can drain Prayer")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void kingdomDividedUsesDirectGraphAndStartGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("A Kingdom Divided");
+        assertEquals(java.util.Arrays.asList(
+                "The Ascent of Arceuus", "The Depths of Despair",
+                "The Forsaken Tower", "The Queen of Thieves",
+                "Tale of the Righteous"), quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Druidic Ritual"));
+        assertFalse(quest.getPrerequisites().contains("Client of Kourend"));
+        assertFalse(quest.getPrerequisites().contains("X Marks the Spot"));
+        assertEquals(7, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(54),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertEquals(Integer.valueOf(35),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain access to the normal spellbook"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "dark essence block or a pickaxe and chisel"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "all seven skill requirements are non-boostable and required to start"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Judge of Yama (Level 168)")
+                        && check.contains("Xamphur (level 239)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void grimTalesDoesNotTurnHerbloreIntoAQuestGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Grim Tales");
+        assertEquals(java.util.Collections.singletonList("Witch's House"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Druidic Ritual"));
+        assertEquals(5, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(71),
+                quest.getSkillRequirements().get(Skill.WOODCUTTING));
+        assertEquals(Integer.valueOf(45),
+                quest.getSkillRequirements().get(Skill.FARMING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain two Tarromin potion (unf)"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "unless the Farming portion of Barbarian Training is complete"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "all five skill requirements are boostable and not needed to start"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "optional if willing to take 17 damage"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Glod (level 138)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void slugMenaceRestoresAltarAndCombatAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Slug Menace");
+        assertEquals(java.util.Arrays.asList("Sea Slug", "Wanted!"),
+                quest.getPrerequisites());
+        assertEquals(4, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.RUNECRAFT));
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.SLAYER));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain and carry a Commorb to start"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "preferably 15–20 because they can shatter"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "Runecraft and Slayer explicitly required to start"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "four elemental talismans or tiaras plus a mind talisman or tiara"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "use a Runecraft cape, or use Guardians of the Rift"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Slug Prince (level 62)")
+                        && check.contains("must be defeated with Melee")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void greatBrainRobberyRestoresConditionalWorkshopAndCombatReadiness()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Great Brain Robbery");
+        assertEquals(java.util.Arrays.asList(
+                        "Creature of Fenkenstrain",
+                        "Cabin Fever",
+                        "Recipe for Disaster - Pirate Pete"),
+                quest.getPrerequisites());
+        assertEquals(3, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(16),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertEquals(Integer.valueOf(50),
+                quest.getSkillRequirements().get(Skill.PRAYER));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("fishbowl helmet with a diving apparatus")
+                        && check.contains("Medallion of the Deep")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("10 wooden cats after partial quest progress")
+                        && check.contains("where account rules permit")
+                        && check.contains("furs from Hunter creatures do not work")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("4 oak planks")
+                        && check.contains("Clockmaking space")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Imcando hammer does not work")
+                        && check.contains("18 total when making the wooden cats")
+                        && check.contains("Ring of Charos")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Barrelchest (level 190)")
+                        && check.contains("disable prayers")
+                        && check.contains("safespotted without taking damage")
+                        && check.contains("four Sorebones (level 57)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.contains("UNIQ--ref")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void forgettableTalePreservesVariableItemCheckWithoutGuessing()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Forgettable Tale...");
+        assertEquals(java.util.Arrays.asList("The Giant Dwarf", "Fishing Contest"),
+                quest.getPrerequisites());
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(22),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertEquals(Integer.valueOf(17),
+                quest.getSkillRequirements().get(Skill.FARMING));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Keldagrim has no range")
+                        && check.contains("cook plain barley into malt elsewhere")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Keldagrim has no Tool Leprechaun")
+                        && check.contains("Barbarian Training")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("ale yeast")
+                        && check.contains("a kebab and 2 beers")
+                        && check.contains("beer glass is obtainable")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Check which random item")
+                        && check.contains("does not enumerate the possible items")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Both skill requirements are boostable")
+                        && check.contains("not required to start")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.contains("UNIQ--ref")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void gettingAheadRestoresOnSiteSupplyAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Getting Ahead");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(26),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("grizzly bear and bear cub west of the farm")
+                        && check.contains("two black bears east")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Kebos Lowlands mine")
+                        && check.contains("bronze pickaxe spawn")
+                        && check.contains("water source and bucket spawn")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Imcando hammer")
+                        && check.contains("Amy's saw")
+                        && check.contains("extra nails are recommended")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("needle with thread or a costume needle")
+                        && check.contains("thread is unnecessary")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Both skill requirements are non-boostable")
+                        && check.contains("required to start")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.equals("Combat encounter: Headless Beast (level 82)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void deviousMindsKeepsDirectGatesAndActionableSetup()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Devious Minds");
+        assertEquals(3, quest.getPrerequisites().size());
+        assertTrue(quest.getPrerequisites().containsAll(java.util.Arrays.asList(
+                "Doric's Quest", "Troll Stronghold", "Wanted!")));
+        assertFalse(quest.getPrerequisites().contains("Enter the Abyss"));
+        assertEquals(3, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(65),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(Integer.valueOf(50),
+                quest.getSkillRequirements().get(Skill.RUNECRAFT));
+        assertEquals(Integer.valueOf(50),
+                quest.getSkillRequirements().get(Skill.FLETCHING));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("65 Smithing is boostable")
+                        && check.contains("not required to start")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("50 Runecraft is non-boostable")
+                        && check.contains("required to start the quest is unknown")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("50 Fletching is boostable")
+                        && check.contains("required to start the quest is unknown")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("mithril 2h sword")
+                        && check.contains("bow string")
+                        && check.contains("large or colossal pouch")
+                        && check.contains("large-pouch setup loses all three items")
+                        && check.contains("colossal pouch is retained")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Abyssal creatures")
+                        && check.contains("Guardians of the Rift")
+                        && check.contains("level 41 or higher")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void curseOfArravTypesItemsToolsAndCombatReadiness()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Curse of Arrav");
+        assertEquals(2, quest.getPrerequisites().size());
+        assertEquals(6, quest.getSkillRequirements().size());
+        assertEquals(4, quest.getItemRequirements().size());
+        assertEquals("Dwellberries",
+                quest.getItemRequirements().get(0).getName());
+        assertEquals(3, quest.getItemRequirements().get(0).getQuantity());
+        assertEquals("Ring of life",
+                quest.getItemRequirements().get(1).getName());
+        assertEquals("Mith grapple",
+                quest.getItemRequirements().get(2).getName());
+        assertEquals("Insulated boots",
+                quest.getItemRequirements().get(3).getName());
+        ItemRule tools = quest.getItemRequirementExpression();
+        assertEquals(ItemRule.Kind.ALL_OF, tools.getKind());
+        assertEquals(ItemRequirementClass.PICKAXE,
+                tools.getChildren().get(0).getItemClass());
+        assertEquals(ItemRequirementClass.CROSSBOW,
+                tools.getChildren().get(1).getItemClass());
+        assertEquals(java.util.Collections.singletonList("Love crossbow"),
+                tools.getChildren().get(1).getExcludedItemNames());
+        assertEquals(java.util.Collections.singletonList(
+                        "Prepare a legal combat setup for the level 141 Golem "
+                                + "guard and level 339 Arrav"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void troubledTortugansKeepsTypedGatesAndToolAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Troubled Tortugans");
+        assertEquals(java.util.Collections.singletonList("Pandemonium"),
+                quest.getPrerequisites());
+        assertEquals(6, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(51),
+                quest.getSkillRequirements().get(Skill.SLAYER));
+        assertEquals(Integer.valueOf(48),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertEquals(Integer.valueOf(45),
+                quest.getSkillRequirements().get(Skill.SAILING));
+        assertEquals(Integer.valueOf(45),
+                quest.getSkillRequirements().get(Skill.HUNTER));
+        assertEquals(Integer.valueOf(40),
+                quest.getSkillRequirements().get(Skill.WOODCUTTING));
+        assertEquals(Integer.valueOf(34),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(java.util.Arrays.asList(
+                        "Bring any axe; a bronze axe is obtainable during "
+                                + "the quest, but a better axe is recommended "
+                                + "for cutting 10 logs",
+                        "Obtain a hammer during the quest or bring an "
+                                + "Imcando hammer",
+                        "Obtain a saw during the quest or bring Amy's saw",
+                        "Combat encounters: Gryphon (level 95) Shellbane "
+                                + "gryphon (level 235)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void tribalTotemUsesOnlyItsTypedThievingRequirement()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Tribal Totem");
+        assertEquals(Integer.valueOf(21),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getAccessChecks().isEmpty());
+    }
+
+    @Test
+    public void fishingContestKeepsCoinAndRodAlternativesActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Fishing Contest");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(Integer.valueOf(10),
+                quest.getSkillRequirements().get(Skill.FISHING));
+        assertEquals(java.util.Arrays.asList(
+                        "Bring a spade and 5 coins, or 10 coins if buying a "
+                                + "fishing rod from Jack",
+                        "Bring a fishing rod or pearl fishing rod; an oily "
+                                + "fishing rod does not work",
+                        "Obtain garlic and a red vine worm during the quest"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Required items:")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void hopespearsWillDistinguishesStartedFromCompletedPrerequisites()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Hopespear's Will");
+        assertEquals(java.util.Collections.singletonList("The Restless Ghost"),
+                quest.getStartedPrerequisites());
+        assertEquals(3, quest.getPrerequisites().size());
+        assertFalse(quest.getPrerequisites().contains("The Restless Ghost"));
+        assertEquals(Integer.valueOf(50),
+                quest.getSkillRequirements().get(Skill.PRAYER));
+        assertEquals(1, quest.getItemRequirements().size());
+        assertEquals("Goblin potion",
+                quest.getItemRequirements().get(0).getName());
+        ItemRule routes = quest.getItemRequirementExpression();
+        assertEquals(ItemRule.Kind.ALL_OF, routes.getKind());
+        assertEquals(3, routes.getChildren().size());
+        assertTrue(routes.getChildren().get(0).getItemNames()
+                .contains("Morytania legs 4"));
+        assertTrue(routes.getChildren().get(1).getItemNames()
+                .contains("Ring of shadows"));
+        assertEquals(ItemRule.Kind.ANY_OF,
+                routes.getChildren().get(2).getKind());
+        assertTrue(routes.getChildren().get(2).getChildren().get(0)
+                .getItemNames().contains("Lunar staff"));
+        assertTrue(routes.getChildren().get(2).getChildren().get(1)
+                .getCheckAction().contains(
+                        "Lumbridge & Draynor Diary is fully completed"));
+        assertEquals(java.util.Collections.singletonList(
+                        "Prepare enough food and potions to defeat Snothead "
+                                + "(level 32), Snailfeet (level 56), Mosschin "
+                                + "(level 88), Redeyes (level 121), and "
+                                + "Strongbones (level 184) without armour, "
+                                + "weapons, or magic"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void fenkenstrainKeepsPartialQuestAndSupplyAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Creature of Fenkenstrain");
+        assertEquals(java.util.Collections.singletonList("Priest in Peril"),
+                quest.getPrerequisites());
+        assertEquals(java.util.Collections.singletonList("The Restless Ghost"),
+                quest.getStartedPrerequisites());
+        assertFalse(quest.getSkillRequirements().containsKey(Skill.SMITHING));
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(25),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertEquals(java.util.Arrays.asList(
+                        "20 Crafting and 25 Thieving are boostable and not "
+                                + "required to start the quest",
+                        "Bring a ghostspeak amulet, silver bar, 3 unnoted "
+                                + "bronze wire, a regular needle, 5 thread, "
+                                + "and a spade; a costume needle does not work",
+                        "Bring 50 coins, or 1 law rune and 1 air rune to cast "
+                                + "Telekinetic Grab with 33 Magic",
+                        "Verify a safe route past level 72 monsters",
+                        "Combat encounter: Experiment (level 51) can be "
+                                + "safespotted or flinched"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void emptyLordTypesStartedQuestsWithoutHardGatingConditionalSkills()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Curse of the Empty Lord");
+        assertFalse(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(java.util.Arrays.asList(
+                        "Desert Treasure I", "The Restless Ghost"),
+                quest.getStartedPrerequisites());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Bring a ring of visibility")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("ghostspeak amulet")
+                        && check.contains("Morytania legs 2 or higher")
+                        && check.contains("except when otherwise noted")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("knife or slash weapon")
+                        && check.contains("only some routes need one")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("53 Thieving")
+                        && check.contains("non-boostable")
+                        && check.contains("ring of visibility is not already owned")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("31 Prayer is non-boostable")
+                        && check.contains("not required to start")
+                        && check.contains("only some players need it")
+                        && check.contains("Edgeville Monastery second floor")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void generalsShadowSeparatesStartedQuestFromTypedRingOwnership()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The General's Shadow");
+        assertEquals(java.util.Collections.singletonList("Desert Treasure I"),
+                quest.getStartedPrerequisites());
+        assertTrue(quest.getPrerequisites().containsAll(java.util.Arrays.asList(
+                "Curse of the Empty Lord", "Fight Arena")));
+        assertTrue(quest.getItemRequirements().stream().anyMatch(
+                item -> item.getName().equals("Ring of visibility")));
+        assertEquals(java.util.Collections.singletonList(
+                "Verify a legal setup for the prayer-disabled, safespottable "
+                        + "Ghost of Bouncer fight"), quest.getAccessChecks());
+    }
+
+    @Test
+    public void ragAndBoneOneKeepsTravelCostAndCombatScopeExplicit()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Rag and Bone Man I");
+        assertFalse(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Arrays.asList(
+                        "Bring 8 coins to buy 8 pots of vinegar; bring 68 "
+                                + "coins total if walking to and from Karamja by boat",
+                        "Bring 8 pots, 8 logs of any type or an axe to obtain "
+                                + "them, and a tinderbox",
+                        "Prepare to defeat 8 quest creatures; the pinned "
+                                + "summary does not identify them"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("see below")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void ragAndBoneTwoDoesNotHardGatePartialQuestOrOptionalDefence()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Rag and Bone Man II");
+        assertEquals(java.util.Collections.singletonList(
+                "Creature of Fenkenstrain"), quest.getStartedPrerequisites());
+        assertFalse(quest.getPrerequisites().contains(
+                "Creature of Fenkenstrain"));
+        assertFalse(quest.getSkillRequirements().containsKey(Skill.DEFENCE));
+        assertEquals(Integer.valueOf(40),
+                quest.getSkillRequirements().get(Skill.SLAYER));
+        assertTrue(quest.getAccessChecks().contains(
+                "Verify a legal basilisk route; 20 Defence is needed only "
+                        + "to wield a mirror shield"));
+        assertTrue(quest.getAccessChecks().contains(
+                "Verify legal setups for the high-level bone targets"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("27 pots, 27 jugs of vinegar")
+                        && check.contains("27 sets of any logs")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("dusty key when below 70 Agility")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("ogre composite bow with brutal arrows")
+                        && check.contains("Crumble Undead")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("mirror shield or V's shield")
+                        && check.contains("verified shield workaround")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("40 Slayer is boostable")
+                        && check.contains("not required to start")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Check the quest's 27 combat targets")
+                        && check.contains("does not enumerate the full target list")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void ratcatchersUsesStartedKeldagrimAccessAndConditionalSupplies()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Ratcatchers");
+        assertEquals(java.util.Collections.singletonList(
+                "Icthlarin's Little Helper"), quest.getPrerequisites());
+        assertEquals(java.util.Collections.singletonList(
+                "The Giant Dwarf"), quest.getStartedPrerequisites());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("overgrown cats cannot be used")
+                        && check.contains("Hooknosed Jack")
+                        && check.contains("strong cat combat stats")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("4 cheese or 4 poisoned cheese")
+                        && check.contains("Clock Tower Basement")
+                        && check.contains("cleaned kwuarm")
+                        && check.contains("Zahur can clean it for 200 coins")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("cleaned marrentill")
+                        && check.contains("bottomless milk bucket")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Catspeak amulet even after Dragon Slayer II")
+                        && check.contains("pot of weeds")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("101 coins, or 51 coins")
+                        && check.contains("Ring of Charos(a)")
+                        && check.contains("one free inventory space")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("cat must fight the King rat")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void recruitmentDriveUsesTypedGraphWithoutRawDuplicateGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recruitment Drive");
+        assertEquals(java.util.Arrays.asList(
+                        "Black Knights' Fortress", "Druidic Ritual"),
+                quest.getPrerequisites());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Combat encounter: Sir Leye (level 20)"),
+                quest.getAccessChecks());
+        assertEquals(
+                "Talk to Sir Amik Varze on the second floor (UK; third floor US) "
+                        + "of the White Knights' Castle's western tower in Falador.",
+                quest.getStartLocation());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void rovingElvesKeepsCharterRouteOutsideMandatorySkillGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Roving Elves");
+        assertEquals(java.util.Arrays.asList("Regicide", "Waterfall Quest"),
+                quest.getPrerequisites());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Glarial's pebble")
+                        && check.contains("Waterfall Dungeon key")
+                        && check.contains("spade and rope")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("56 Agility")
+                        && check.contains("boostable and not required to start")
+                        && check.contains("bypass that level with a charter ship")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Moss Guardian (level 84)")
+                        && check.contains("restricted-item rules")
+                        && check.contains("can be flinched")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void knightsSwordKeepsF2pPreparationFreeOfMemberDetours()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Knight's Sword");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(Integer.valueOf(10),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("full redberry pie")
+                        && check.contains("2 iron bars")
+                        && check.contains("pickaxe available in Rimmington")
+                        && check.contains("mine 1 blurite ore")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("personal blurite sword")
+                        && check.contains("4 iron bars total")
+                        && check.contains("2 blurite ore total")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Reach or boost to 10 Mining")
+                        && check.contains("started without that level")
+                        && check.contains("level 57 ice warriors")
+                        && check.contains("level 53 ice giants")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Members")
+                        || check.contains("Falador easy diary")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void xMarksTheSpotKeepsF2pSpadeConstraintActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("X Marks the Spot");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Bring a spade; the Eastfloor spade does not work"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void impCatcherKeepsF2pBeadsAndIronSourcingExplicit()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Imp Catcher");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Arrays.asList(
+                        "Bring a black bead, yellow bead, red bead, and white bead",
+                        "For self-sourcing Iron accounts, obtain any missing "
+                                + "beads from multiple level-2 imps; this combat "
+                                + "is optional for other accounts"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void sheepShearerKeepsF2pWoolAlternativeActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Sheep Shearer");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Bring 20 unnoted balls of wool, or obtain shears "
+                                + "during the quest to collect wool and spin it "
+                                + "into balls of wool"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void witchsPotionKeepsF2pIngredientTimingActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Witch's Potion");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Arrays.asList(
+                        "Bring burnt meat, an eye of newt, and an onion",
+                        "Obtain a rat's tail after starting the quest; it is "
+                                + "not obtainable beforehand",
+                        "Combat encounter: Rat (level 1)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void corsairCurseKeepsF2pObtainableToolsAndCombatActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Corsair Curse");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Arrays.asList(
+                        "Bring a spade and tinderbox, or obtain both during the quest",
+                        "Combat encounter: Ithoi the Navigator (level 35)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void misthalinMysteryKeepsF2pQuestObtainableToolsActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Misthalin Mystery");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Bring a bucket, tinderbox, and knife, or obtain all three "
+                                + "during the quest"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void observatoryQuestTypesItemsAndKeepsOptionalCombatActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Observatory Quest");
+        assertFalse(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(3, quest.getItemRequirements().size());
+        assertEquals("Plank", quest.getItemRequirements().get(0).getName());
+        assertEquals(3, quest.getItemRequirements().get(0).getQuantity());
+        assertEquals("Bronze bar", quest.getItemRequirements().get(1).getName());
+        assertEquals(1, quest.getItemRequirements().get(1).getQuantity());
+        assertEquals("Molten glass", quest.getItemRequirements().get(2).getName());
+        assertEquals(1, quest.getItemRequirements().get(2).getQuantity());
+        assertEquals(java.util.Collections.singletonList(
+                        "Avoid the optional level 42 Goblin guard fight by "
+                                + "trapping it behind a column, or bring a legal "
+                                + "combat setup"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void bearYourSoulTypesSpadeAndAlternativeAccessRoutes()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Bear Your Soul");
+        assertFalse(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(1, quest.getItemRequirements().size());
+        assertEquals("Spade", quest.getItemRequirements().get(0).getName());
+        assertEquals(1, quest.getItemRequirements().get(0).getQuantity());
+        ItemRule routes = quest.getItemRequirementExpression();
+        assertEquals(ItemRule.Kind.ANY_OF, routes.getKind());
+        assertEquals(3, routes.getChildren().size());
+        assertEquals("Dusty key",
+                routes.getChildren().get(0).getItemNames().get(0));
+        assertEquals("Key master teleport",
+                routes.getChildren().get(1).getItemNames().get(0));
+        assertEquals(ItemRule.Kind.CHECK_NEEDED,
+                routes.getChildren().get(2).getKind());
+        assertTrue(routes.getChildren().get(2).getCheckAction()
+                .contains("boostable 70/80 Agility route"));
+        assertTrue(quest.getAccessChecks().isEmpty());
+    }
+
+    @Test
+    public void scorpionCatcherKeepsDungeonRoutesAndJailerConditional()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Scorpion Catcher");
+        assertEquals(java.util.Collections.singletonList(
+                "Alfred Grimhand's Barcrawl"), quest.getPrerequisites());
+        assertEquals(Integer.valueOf(31),
+                quest.getSkillRequirements().get(Skill.PRAYER));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("dusty key obtainable during the quest")
+                        && check.contains("Legends' Guild Shop of Useful Items")
+                        && check.contains("boostable 70 Agility")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("31 Prayer")
+                        && check.contains("not boostable")
+                        && check.contains("not required to start")
+                        && check.contains("level 172 black demons")
+                        && check.contains("level 64 poison spiders")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Combat encounter only when obtaining")
+                        && check.contains("Jailer (level 47)")
+                        && check.contains("avoids this fight")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void handInTheSandUsesTypedStartGatesAndActionableSupplies()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Hand in the Sand");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(17),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertEquals(Integer.valueOf(49),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("about 150 coins")
+                        && check.contains("empty vial")
+                        && check.contains("white berries")
+                        && check.contains("lantern lens")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("beer during the quest")
+                        && check.contains("Port Sarim Food Store")
+                        && check.contains("Betty sells for 20 coins")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("bucket of sand")
+                        && check.contains("bringing a bucket")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Both skill requirements are non-boostable")
+                        && check.contains("required to start")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void shadesOfMorttonUsesDirectGraphAndSoloTemplePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Shades of Mort'ton");
+        assertEquals(java.util.Collections.singletonList("Priest in Peril"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Druidic Ritual"));
+        assertEquals(3, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(5),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(15),
+                quest.getSkillRequirements().get(Skill.HERBLORE));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("at least 1,000 coins")
+                        && check.contains("2 Tarromin potion (unf)")
+                        && check.contains("2 ashes")
+                        && check.contains("logs or an axe")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("unpopulated temple")
+                        && check.contains("Flamtaer hammer")
+                        && check.contains("Razmire sells one")
+                        && !check.contains("Grand Exchange")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("All three skill requirements are boostable")
+                        && check.contains("not required to start")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("temple-rebuilding onslaught")
+                        && check.contains("nearby players")));
+        assertTrue(quest.getAccessChecks().contains(
+                "Combat encounters: 5 Loar Shades (level 40)"));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void seaSlugOffersSelfSourcedSwampPasteWithoutRawSkillMarkup()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Sea Slug");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("mixing flour with swamp tar")
+                        && check.contains("Trader crewmember for 75 coins")
+                        && check.contains("Rasolo")
+                        && check.contains("Khazard General Store")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Reach or boost to 30 Firemaking")
+                        && check.contains("started without that level")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void depthsOfDespairUsesDirectClientGraphAndTypedStartGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Depths of Despair");
+        assertEquals(java.util.Collections.singletonList("Client of Kourend"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("X Marks the Spot"));
+        assertEquals(Integer.valueOf(18),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertEquals(java.util.Arrays.asList(
+                        "18 Agility is non-boostable and required to start the quest",
+                        "Combat encounter: Sand Snake (level 36)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void ascentOfArceuusUsesDirectClientGraphAndTypedStartGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Ascent of Arceuus");
+        assertEquals(java.util.Collections.singletonList("Client of Kourend"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("X Marks the Spot"));
+        assertEquals(Integer.valueOf(12),
+                quest.getSkillRequirements().get(Skill.HUNTER));
+        assertEquals(java.util.Arrays.asList(
+                        "12 Hunter is non-boostable and required to start the quest",
+                        "Combat encounters: 5 Tormented Souls (level 16) "
+                                + "and the Trapped Soul (level 30)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void clockTowerKeepsObtainableWaterOptionAndRunPastHazard()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Clock Tower");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Arrays.asList(
+                        "Bring a bucket of water, a jug of water, ice gloves, "
+                                + "or smiths gloves (i); a bucket of water is "
+                                + "obtainable during the quest",
+                        "Be able to run past level 53 ogres"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void hazeelCultKeepsCombatConditionalOnCerilsRoute()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Hazeel Cult");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "If taking Ceril's side, be able to defeat Alomone "
+                                + "(level 13)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void monksFriendKeepsAlternativeMaterialAndRunPastHazard()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Monk's Friend");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Arrays.asList(
+                        "Bring a jug of water and either regular logs or a "
+                                + "regular plank",
+                        "Be able to run past two level 14 thieves and one "
+                                + "level 26 NPC"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void towerOfLifeUsesTypedConstructionGateAndExactBeerRequirement()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Tower of Life");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(Integer.valueOf(10),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertEquals(java.util.Arrays.asList(
+                        "10 Construction is non-boostable and required to "
+                                + "start the quest",
+                        "Bring a hammer or Imcando hammer, a saw or crystal "
+                                + "saw, and a regular beer; other beers do "
+                                + "not work"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void elementalWorkshopTwoKeepsBoostableUnknownStartContract()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Elemental Workshop II");
+        assertEquals(java.util.Collections.singletonList(
+                        "Elemental Workshop I"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(java.util.Arrays.asList(
+                        "20 Magic and 30 Smithing are boostable; whether "
+                                + "either is required to start is unknown",
+                        "Bring a hammer, the battered key from Elemental "
+                                + "Workshop I, and either 2 elemental metals "
+                                + "or 2 elemental ore plus 8 coal; bring a "
+                                + "pickaxe if obtaining ore during the quest",
+                        "For a Mind shield, use 3 elemental metals or 3 "
+                                + "elemental ore plus 12 coal instead",
+                        "If you do not bring elemental metal bars, be prepared "
+                                + "for 2 Earth elementals (level 35)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void whatLiesBelowUsesDirectGraphAndTypedRunecraftStartGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("What Lies Below");
+        assertEquals(java.util.Collections.singletonList("Rune Mysteries"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(35),
+                quest.getSkillRequirements().get(Skill.RUNECRAFT));
+        assertEquals(java.util.Arrays.asList(
+                        "35 Runecraft is non-boostable and required to start "
+                                + "the quest",
+                        "Bring an empty bowl and 15 chaos runes",
+                        "Have access to the Chaos Altar through a chaos or "
+                                + "catalytic talisman or tiara, the Abyss, or "
+                                + "Temple of the Eye",
+                        "Combat encounters: 5 Outlaws (level 32) and King "
+                                + "Roald (level 47)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void olafsQuestKeepsBoostableSkillsAndRopeInventoryTradeoff()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Olaf's Quest");
+        assertEquals(java.util.Collections.singletonList(
+                        "The Fremennik Trials"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(40),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertEquals(Integer.valueOf(50),
+                quest.getSkillRequirements().get(Skill.WOODCUTTING));
+        assertEquals(java.util.Arrays.asList(
+                        "40 Firemaking and 50 Woodcutting are boostable and "
+                                + "not required to start the quest",
+                        "Bring any woodcutting axe, a tinderbox, a spade, and "
+                                + "6 ropes; ropes are obtainable during the "
+                                + "quest",
+                        "Keep 4 free inventory slots, or 10 if not bringing "
+                                + "your own ropes",
+                        "Combat encounters: Skeleton fremennik (level 40) and "
+                                + "Ulfric (level 100); be able to defeat "
+                                + "Ulfric, who is safespottable"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void aSoulsBaneSeparatesKillableWavesFromTankOnlyPhase()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("A Soul's Bane");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Arrays.asList(
+                        "Bring a rope and a weapon",
+                        "Be able to defeat level 45+ enemies",
+                        "Combat waves: 7-8 angry unicorns, angry bears, angry "
+                                + "giant rats, and/or angry goblins; then 5 "
+                                + "fear reapers (level 42)",
+                        "Tank 6 confusion beasts (level 43); they cannot be "
+                                + "killed",
+                        "Further combat: 5 hopeless creatures (level 40) and "
+                                + "3 parts of Tolna (level 46)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void forsakenTowerUsesDirectClientGraphAndObtainableTinderbox()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Forsaken Tower");
+        assertEquals(java.util.Collections.singletonList(
+                        "Client of Kourend"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("X Marks the Spot"));
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Bring a tinderbox; one is obtainable during the "
+                                + "quest"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void queenOfThievesKeepsCookingAsOptionalStewRoute()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Queen of Thieves");
+        assertEquals(java.util.Collections.singletonList(
+                        "Client of Kourend"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("X Marks the Spot"));
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertFalse(quest.getSkillRequirements().containsKey(Skill.COOKING));
+        assertEquals(java.util.Arrays.asList(
+                        "20 Thieving is non-boostable and required to start "
+                                + "the quest",
+                        "Bring a stew, or use 6 coins and 25 Cooking to obtain "
+                                + "ingredients and cook one during the quest"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void taleOfTheRighteousUsesDirectGraphAndThreeStylePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Tale of the Righteous");
+        assertEquals(java.util.Collections.singletonList(
+                        "Client of Kourend"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("X Marks the Spot"));
+        assertEquals(Integer.valueOf(16),
+                quest.getSkillRequirements().get(Skill.STRENGTH));
+        assertEquals(Integer.valueOf(10),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertEquals(java.util.Arrays.asList(
+                        "16 Strength and 10 Mining are non-boostable and "
+                                + "required to start the quest",
+                        "Bring a pickaxe, a ranged weapon with ammunition, "
+                                + "runes for 2-3 casts of any magic combat "
+                                + "spell, and a rope; darts or throwing knives "
+                                + "work for ranged, and the pickaxe can serve "
+                                + "as the melee weapon",
+                        "Combat encounters: Corrupt Lizardman (level 46)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void deathOnTheIsleKeepsEquipmentFreeNonlethalEncounter()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Death on the Isle");
+        assertEquals(java.util.Collections.singletonList(
+                        "Children of the Sun"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(34),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertEquals(Integer.valueOf(32),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertEquals(java.util.Arrays.asList(
+                        "34 Thieving and 32 Agility are non-boostable and "
+                                + "required to start the quest",
+                        "Combat encounter: fight two low-level enemies with "
+                                + "no equipment; they cannot kill you"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void betweenARockKeepsOptionalCannonballAndVariableBossLevel()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Between a Rock...");
+        assertEquals(java.util.Arrays.asList("Dwarf Cannon",
+                        "Fishing Contest"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.DEFENCE));
+        assertEquals(Integer.valueOf(40),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertEquals(Integer.valueOf(50),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(java.util.Arrays.asList(
+                        "30 Defence, 40 Mining, and 50 Smithing are boostable "
+                                + "and not required to start the quest",
+                        "Bring a pickaxe, 4 gold bars, a hammer, an ammo mould "
+                                + "or double ammo mould, and about 830 coins "
+                                + "for the cart and ferry; an ammo mould is "
+                                + "available during the quest for 5 coins",
+                        "Bring an extra gold bar and Telekinetic Grab only if "
+                                + "you want to keep a golden cannonball after "
+                                + "the quest",
+                        "Combat encounters: level 14 scorpions and the "
+                                + "Arzinian Being of Bordanzan (level 75-125); "
+                                + "be able to defeat the boss, whose level "
+                                + "depends on how much gold you mine"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void spiritsOfTheElidKeepsQuestObtainableCombatFallbacks()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Spirits of the Elid");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(Integer.valueOf(33),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertEquals(Integer.valueOf(37),
+                quest.getSkillRequirements().get(Skill.RANGED));
+        assertEquals(Integer.valueOf(37),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertEquals(Integer.valueOf(37),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertEquals(java.util.Arrays.asList(
+                        "33 Magic and 37 Ranged, Mining, and Thieving are "
+                                + "boostable and not required to start the "
+                                + "quest",
+                        "Bring 1 law rune and 1 air rune for Telekinetic Grab, "
+                                + "a needle (not a costume needle), 1-2 thread, "
+                                + "crush, stab, and slash weapons, a light "
+                                + "source, a knife or fletching knife, and a "
+                                + "rope",
+                        "Bring a pickaxe you can use; a bronze pickaxe is "
+                                + "obtainable during the quest",
+                        "Bring a Ranged or Magic attack method; a shortbow and "
+                                + "bronze arrows are obtainable during the "
+                                + "quest",
+                        "Be able to defeat the Black, Grey, and White golems "
+                                + "(level 75 each)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void meatAndGreetUsesTypedGraphWithoutDuplicateRawAccess()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Meat and Greet");
+        assertEquals(java.util.Collections.singletonList(
+                        "Children of the Sun"),
+                quest.getPrerequisites());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Combat encounters: Dire Wolf Alpha (level 113) and "
+                                + "Minotaur (level 193)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void pryingTimesKeepsOpenPortSlotAndSkippableCombat()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Prying Times");
+        assertEquals(java.util.Arrays.asList("Pandemonium",
+                        "The Knight's Sword"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(Integer.valueOf(12),
+                quest.getSkillRequirements().get(Skill.SAILING));
+        assertEquals(java.util.Arrays.asList(
+                        "30 Smithing and 12 Sailing are non-boostable and "
+                                + "required to start the quest",
+                        "Keep one port task slot open",
+                        "Bring a hammer or Imcando hammer, a steel bar, a "
+                                + "redberry pie, and the Captain's log; a "
+                                + "hammer is obtainable during the quest",
+                        "Optional combat: Drink troll (level 14) can be "
+                                + "skipped"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void scrambledKeepsQuestObtainableSuppliesAndSafeCombatOptions()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Scrambled!");
+        assertEquals(java.util.Collections.singletonList(
+                        "Children of the Sun"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(38),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertEquals(Integer.valueOf(36),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertEquals(Integer.valueOf(35),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(java.util.Arrays.asList(
+                        "38 Construction, 36 Cooking, and 35 Smithing are "
+                                + "non-boostable and required to start the "
+                                + "quest",
+                        "All required items are obtainable during the quest",
+                        "Collect a bowl of water from two town spawns or the "
+                                + "fountain by the bank, 2 planks south of "
+                                + "town near the water, and at least 6 nails; "
+                                + "extra nails are recommended because they "
+                                + "can bend, and 20 are available on the "
+                                + "workbench",
+                        "Use a saw from the range shop or Amy's saw, and a "
+                                + "hammer from the furnace house or an "
+                                + "Imcando hammer",
+                        "Combat encounter: Large chicken (level 16) can be "
+                                + "recoiled",
+                        "Combat encounters: Black jaguar (level 88) and Red "
+                                + "dragon (level 106) can be safespotted or "
+                                + "recoiled"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void intoTheTombsUsesOnlyDirectBeneathCursedSandsGraph()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Into the Tombs");
+        assertEquals(java.util.Collections.singletonList(
+                        "Beneath Cursed Sands"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Contact!"));
+        assertFalse(quest.getPrerequisites().contains("Prince Ali Rescue"));
+        assertFalse(quest.getPrerequisites().contains(
+                "Icthlarin's Little Helper"));
+        assertFalse(quest.getPrerequisites().contains("Gertrude's Cat"));
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Raid-level-0 combat encounters with no invocations: "
+                                + "Akkha (level 337), Ba-Ba (level 359), "
+                                + "Kephri (level 341), Zebak (level 371), "
+                                + "Tumeken's Warden (level 489), and "
+                                + "Elidinis' Warden (level 489)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void currentAffairsKeepsUnknownFishingBoostStatusExplicit()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Current Affairs");
+        assertEquals(java.util.Collections.singletonList("Pandemonium"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(22),
+                quest.getSkillRequirements().get(Skill.SAILING));
+        assertEquals(Integer.valueOf(10),
+                quest.getSkillRequirements().get(Skill.FISHING));
+        assertEquals(java.util.Arrays.asList(
+                        "22 Sailing is non-boostable and required to start "
+                                + "the quest",
+                        "10 Fishing is required to start the quest; whether "
+                                + "it is boostable is unknown",
+                        "Bring 50 coins; charcoal is obtainable during the "
+                                + "quest"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void redReefKeepsDirectGraphAndUnknownStartGateExplicit()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Red Reef");
+        assertEquals(java.util.Collections.singletonList(
+                        "Troubled Tortugans"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Pandemonium"));
+        assertEquals(Integer.valueOf(52),
+                quest.getSkillRequirements().get(Skill.SAILING));
+        assertEquals(Integer.valueOf(48),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(java.util.Arrays.asList(
+                        "52 Sailing and 48 Smithing are non-boostable; "
+                                + "whether either is required to start the "
+                                + "quest is unknown",
+                        "Use a boat; equip it with cannons for ship combat, "
+                                + "or bring Magic or Ranged gear to skip ship "
+                                + "combat",
+                        "Ship combat or crew encounters: Oaky Doak (level "
+                                + "77), Boatswain Bill Teak (level 77), "
+                                + "Mister U. (level 77), Captain Ruban Acer "
+                                + "(level 95), Old Jack (level 77), Mute Jack "
+                                + "(level 77), Bloody Jack (level 77), and "
+                                + "Captain Jack (level 95)",
+                        "Combat encounters: 6 pirates (level 52), Black Eye "
+                                + "Bethel (level 191), and Giant lobster "
+                                + "(level 112, safespottable)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void shadowsOfCustodiaKeepsStartGatesAndItemSources()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Shadows of Custodia");
+        assertEquals(java.util.Collections.singletonList(
+                        "Children of the Sun"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(54),
+                quest.getSkillRequirements().get(Skill.SLAYER));
+        assertEquals(Integer.valueOf(45),
+                quest.getSkillRequirements().get(Skill.FISHING));
+        assertEquals(Integer.valueOf(41),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertEquals(Integer.valueOf(36),
+                quest.getSkillRequirements().get(Skill.HUNTER));
+        assertEquals(java.util.Arrays.asList(
+                        "54 Slayer, 45 Fishing, 41 Construction, and 36 "
+                                + "Hunter are non-boostable and required to "
+                                + "start the quest",
+                        "Bring 4 willow longbows; buy them from Arcuani's "
+                                + "Archery Supplies in Tal Teklan or Lowe's "
+                                + "Archery Emporium in Varrock",
+                        "Obtain 4 maple logs, a hammer, and a fishing rod "
+                                + "during the quest; an oily, pearl, or "
+                                + "barbarian rod also works",
+                        "Combat encounters: 3 Strange creatures (level 93)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void fallenFromGraceKeepsSoloBoatAndUnknownStartGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Fallen From Grace");
+        assertEquals(java.util.Collections.singletonList("Pandemonium"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(62),
+                quest.getSkillRequirements().get(Skill.SAILING));
+        assertEquals(Integer.valueOf(60),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(53),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertEquals(Integer.valueOf(47),
+                quest.getSkillRequirements().get(Skill.RUNECRAFT));
+        assertEquals(java.util.Arrays.asList(
+                        "62 Sailing, 60 Crafting, 53 Mining, and 47 "
+                                + "Runecraft are non-boostable; whether any "
+                                + "are required to start the quest is unknown",
+                        "Use your own raft or skiff and travel alone to "
+                                + "disembark in Wyrmscraig Cavern; a sloop "
+                                + "does not work",
+                        "Obtain a pickaxe and chisel during the quest",
+                        "Bring combat equipment and supplies for the Mad "
+                                + "Angel, which is weak to Crush",
+                        "Combat encounters: 3 mountain trolls (level 69) "
+                                + "and Mad Angel (level 270)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void atFirstLightKeepsNearbyAndQuestItemAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("At First Light");
+        assertEquals(java.util.Arrays.asList(
+                        "Children of the Sun", "Eagles' Peak"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(46),
+                quest.getSkillRequirements().get(Skill.HUNTER));
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.HERBLORE));
+        assertEquals(Integer.valueOf(27),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertEquals(java.util.Arrays.asList(
+                        "46 Hunter, 30 Herblore, and 27 Construction are "
+                                + "non-boostable and required to start the "
+                                + "quest",
+                        "Bring a needle or costume needle; a needle spawns "
+                                + "nearby in Pellem's Fur Store",
+                        "Obtain a hammer during the quest or bring an "
+                                + "Imcando hammer",
+                        "Obtain 2 jerboa tails during the quest, or buy a "
+                                + "box trap from Imia's Supplies nearby"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void ribbitingTaleRestoresChildrenOfTheSunPrerequisite()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog().definitionFor(
+                "The Ribbiting Tale of a Lily Pad Labour Dispute");
+        assertEquals(java.util.Collections.singletonList(
+                        "Children of the Sun"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(15),
+                quest.getSkillRequirements().get(Skill.WOODCUTTING));
+        assertEquals(java.util.Arrays.asList(
+                        "15 Woodcutting is non-boostable and required to "
+                                + "start the quest",
+                        "Bring any axe; a bronze axe is obtainable during "
+                                + "the quest",
+                        "Combat encounters: Cuthbert, Lord of Dread (level "
+                                + "1)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void pandemoniumKeepsQuestObtainableToolsActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Pandemonium");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Obtain a hammer and saw during the quest"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void romeoAndJulietKeepsQuestObtainableBerriesActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Romeo & Juliet");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Obtain cadava berries during the quest"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Elemental Workshop I");
+        assertFalse(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(3, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("20 Mining, 20 Smithing, and 20 Crafting")
+                        && check.contains("boostable")
+                        && check.contains("not required to start")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("knife or slash weapon")
+                        && check.contains("dagger or scimitar")
+                        && check.contains("obtainable during the quest")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("pickaxe")
+                        && check.contains("thread")
+                        && check.contains("hammer")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("needle or obtain one during the quest")
+                        && check.contains("costume needle does not work")));
+        assertTrue(quest.getAccessChecks().contains(
+                "Bring leather or obtain it during the quest"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Bring 4 coal")
+                        && check.contains("4 more for each additional elemental bar")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Earth elemental (level 35)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void coldWarDoesNotConfuseMahoganyPlankWithWoodcuttingRequirement()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Cold War");
+        assertFalse(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertFalse(quest.getSkillRequirements().containsKey(
+                Skill.WOODCUTTING));
+        assertEquals(5, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(34),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(15),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertEquals(Integer.valueOf(10),
+                quest.getSkillRequirements().get(Skill.HUNTER));
+        assertTrue(quest.getAccessChecks().contains(
+                "Have access to a crafting table 3"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("all five are non-boostable")
+                        && check.contains("required to start")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("10 oak planks")
+                        && check.contains("10 steel nails")
+                        && check.contains("mahogany plank")
+                        && check.contains("leather")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("clockwork")
+                        && check.contains("steel bar")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("raw cod")
+                        && check.contains("Ring of Charos(a)")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("5 regular chicken feathers")
+                        && check.contains("other feathers do not work")));
+        assertTrue(quest.getAccessChecks().contains(
+                "Cowbells are obtained only during the quest"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("1–3 Icelords (level 51)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void trollRomanceUsesOnlyItsSourceBackedAgilityRequirement()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Troll Romance");
+        assertFalse(quest.isFreeToPlay());
+        assertEquals(java.util.Collections.singletonList("Troll Stronghold"),
+                quest.getPrerequisites());
+        assertFalse(quest.getSkillRequirements().containsKey(
+                Skill.WOODCUTTING));
+        assertEquals(1, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(28),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("28 Agility is boostable")
+                        && check.contains("required to start the quest is unknown")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("iron bar")
+                        && check.contains("maple or yew logs")
+                        && check.contains("rope")));
+        assertTrue(quest.getAccessChecks().contains(
+                "Bring climbing boots unless using Trollheim Teleport"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("bucket of wax")
+                        && check.contains("cake tin")
+                        && check.contains("swamp tar")
+                        && check.contains("insect repellent on a beehive")
+                        && check.contains("using a bucket on it")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Arrg (level 113)")
+                        && check.contains("safespottable")
+                        && check.contains("difficult to reach")
+                        && check.contains("not a safe death")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
+    public void doricsQuestTreatsOresAsItemsNotAMiningGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Doric's Quest");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Bring 6 clay (not soft clay), 4 copper ores, "
+                                + "and 2 iron ores"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void sheepHerderKeepsDeterministicCoinPreparationActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Sheep Herder");
+        assertFalse(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList("Bring 100 coins"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void eyesOfGlouphrieKeepsSapAndMudRuneAsItemPreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Eyes of Glouphrie");
+        assertFalse(quest.getSkillRequirements().containsKey(
+                Skill.RUNECRAFT));
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(46),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertEquals(Integer.valueOf(5),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertEquals(java.util.Arrays.asList(
+                        "5 Construction is non-boostable; whether it is "
+                                + "required to start the quest is unknown",
+                        "46 Magic is non-boostable and required during the "
+                                + "quest but not to start it",
+                        "Bring a bucket of sap, or make one by using a knife "
+                                + "on a pointy evergreen-shaped tree with a "
+                                + "bucket in your inventory",
+                        "Bring a mud rune, maple logs, oak logs, hammer, saw, "
+                                + "and pestle and mortar",
+                        "Combat encounters: 6 Evil creatures with 1 HP each"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void fremennikIslesUsesOnlyItsMandatoryConstructionGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Fremennik Isles");
+        assertFalse(quest.getSkillRequirements().containsKey(Skill.AGILITY));
+        assertEquals(1, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertTrue(quest.getAccessChecks().contains(
+                "Resolve the Mining-level-dependent ore requirement"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Ice Troll King")));
+    }
+
+    @Test
+    public void taiBwoWannaiTrioSeparatesSkillsFromPotionAcquisition()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Tai Bwo Wannai Trio");
+        assertEquals(3, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(5),
+                quest.getSkillRequirements().get(Skill.FISHING));
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertEquals(Integer.valueOf(15),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertFalse(quest.getSkillRequirements().containsKey(Skill.HERBLORE));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Agility potion(4)")));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a knife or bladed weapon, small fishing net"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "adjacent Melee deals no damage to the monkey"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "15 Agility and 5 Fishing are boostable, but 30 Cooking is not"));
+        assertTrue(quest.getAccessChecks().get(1).startsWith(
+                "Obtain Karamjan rum or 30 coins"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "before leaving the island or the rum disappears"));
+        assertTrue(quest.getAccessChecks().contains(
+                "15 Agility, 30 Cooking, and 5 Fishing are required during "
+                        + "the quest but not to start it"));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void finalDawnUsesDirectQuestGraphAndConcretePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Final Dawn");
+        assertEquals(java.util.Arrays.asList(
+                "The Heart of Darkness", "Perilous Moons"),
+                quest.getPrerequisites());
+        assertEquals(3, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(66),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain Emissary robes"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Augur Metzli (lvl-396)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
+    public void heartOfDarknessUsesDirectQuestGraphAndConcretePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Heart of Darkness");
+        assertEquals(java.util.Collections.singletonList("Twilight's Promise"),
+                quest.getPrerequisites());
+        assertEquals(4, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(55),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain 30 coins"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Amoxliatl (level 263)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
     }
 
     @Test

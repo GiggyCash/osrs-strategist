@@ -36,6 +36,18 @@ public class CandidateSafetyPolicyTest
         assertTrue(policy.isAllowed(recommendation("combat-achievements:easy"), main));
     }
 
+    @Test
+    public void unknownAccountModeCannotReceiveUnprovenIrreversibleWork()
+    {
+        AccountSnapshot unknown = account(99,
+                70, 70, 70, 70, 70, 70, 70, 70);
+
+        assertFalse(policy.isAllowed(recommendation("pvm:test"),
+                context(unknown)));
+        assertTrue(policy.isAllowed(recommendation("safe:test",
+                Safety.harmless(false)), context(unknown)));
+    }
+
     private void assertProtected(AccountSnapshot account)
     {
         StrategyContext context = context(account);
@@ -75,6 +87,14 @@ public class CandidateSafetyPolicyTest
     private static AccountSnapshot account(int attack, int strength, int defence,
             int ranged, int prayer, int magic, int hp, int nonCombat)
     {
+        return account(0, attack, strength, defence, ranged, prayer, magic,
+                hp, nonCombat);
+    }
+
+    private static AccountSnapshot account(int modeCode, int attack,
+            int strength, int defence, int ranged, int prayer, int magic,
+            int hp, int nonCombat)
+    {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, nonCombat); xp.put(skill, 0); }
@@ -82,6 +102,8 @@ public class CandidateSafetyPolicyTest
         levels.put(Skill.DEFENCE, defence); levels.put(Skill.RANGED, ranged);
         levels.put(Skill.PRAYER, prayer); levels.put(Skill.MAGIC, magic);
         levels.put(Skill.HITPOINTS, hp); levels.put(Skill.SLAYER, 1);
-        return new AccountSnapshot("Safety", 0L, 0, "Main", Membership.P2P, 1, 1000, 0L, levels, xp);
+        return new AccountSnapshot("Safety", 0L, modeCode,
+                AccountMode.fromTypeCode(modeCode).name(), Membership.P2P,
+                1, 1000, 0L, levels, xp);
     }
 }

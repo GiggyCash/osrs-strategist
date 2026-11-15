@@ -72,6 +72,25 @@ public class VariableGuidanceWiringTest
         assertTrue(guidance.getAction().contains("500 personal points"));
     }
 
+    @Test
+    public void crudeChairsRoutePastExactPlanningToVariableNailGuidance()
+    {
+        Guidance guidance = TestFixtures.recommendationGuidanceService().build(
+                data(Skill.CONSTRUCTION, 1,
+                        item(960, "Plank", 10),
+                        item(1539, "Steel nails", 20)),
+                Skill.CONSTRUCTION,
+                1,
+                4,
+                plan("construction_crude_chairs", Skill.CONSTRUCTION),
+                true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getSupplies().contains("at least two steel nails"));
+        assertTrue(guidance.getNote().contains("does not fabricate an exact nail total"));
+        assertFalse(guidance.getAction().matches(".*[0-9]+ chairs.*"));
+    }
+
     private static GameData data(Skill skill, int level)
     {
         return data(skill, level, new ItemState[0]);

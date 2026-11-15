@@ -1,0 +1,726 @@
+package compass;
+
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import net.runelite.api.Skill;
+import net.runelite.api.EquipmentInventorySlot;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+public class MoonsGrindReadyGoalTest
+{
+    private static final String ACTIVITY = "pvm:lunar_chests";
+    private final PvmCandidateProvider provider = new PvmCandidateProvider();
+
+    @Test
+    public void goalUsesReviewedQuestAndSkillDependencies()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Perilous Moons");
+        assertNotNull(quest);
+        assertEquals(Collections.singletonList("Twilight's Promise"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(48),
+                quest.getSkillRequirements().get(Skill.SLAYER));
+
+        StrategyContext context = context(data(0, Membership.P2P,
+                QuestStatus.NOT_STARTED, checkNeeded(), false),
+                GoalType.MOONS_GRIND_READY);
+        GoalDependencyProvenanceService goals =
+                new GoalDependencyProvenanceService();
+        assertTrue(goals.isRequiredQuest(GoalType.MOONS_GRIND_READY,
+                "Perilous Moons", context));
+        assertEquals(48, goals.nextRequiredSkillLevel(
+                GoalType.MOONS_GRIND_READY, Skill.SLAYER, context));
+    }
+
+    @Test
+    public void unfinishedOrUnknownQuestCannotBeBypassedByPvmPreparation()
+    {
+        assertNull(find(provider.candidates(context(data(0, Membership.P2P,
+                QuestStatus.NOT_STARTED, checkNeeded(), true),
+                GoalType.MOONS_GRIND_READY))));
+        assertNull(find(provider.candidates(context(data(0, Membership.P2P,
+                QuestStatus.UNKNOWN, checkNeeded(), true),
+                GoalType.MOONS_GRIND_READY))));
+    }
+
+    @Test
+    public void unfinishedAccessProducesActionableGoalQuestPreparation()
+    {
+        GameData blocked = data(0, Membership.P2P,
+                QuestStatus.NOT_STARTED, checkNeeded(), true);
+        Recommendation candidate = find(TestFixtures.questCandidateProvider(
+                new QuestPriorityCatalog()).candidates(context(blocked,
+                        GoalType.MOONS_GRIND_READY)));
+
+        assertNotNull(candidate);
+        assertEquals("quest:perilous-moons", candidate.getId());
+        assertEquals(Confidence.CHECK_NEEDED, candidate.getConfidence());
+        assertEquals("Train Slayer from 40 to 48.",
+                candidate.getGuidance().getAction());
+        assertTrue(candidate.getReason().contains(
+                "selected goal's proven quest path"));
+
+        List<Recommendation> queue = moonsStrategyEngine().evaluate(blocked,
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.MOONS_GRIND_READY,
+                false, false, new PreferenceProfile()).getRecommendations();
+        assertFalse(queue.isEmpty());
+        assertEquals("skill:slayer", queue.get(0).getId());
+        assertEquals(48, queue.get(0).getTargetLevel());
+        assertTrue(new ActionabilityPolicy().canLeadQueue(queue.get(0)));
+    }
+
+    @Test
+    public void metAccessLevelsProduceActionablePerilousMoonsPreparation()
+    {
+        GameData preparing = data(0, Membership.P2P,
+                QuestStatus.NOT_STARTED, checkNeeded(), true,
+                Collections.singletonMap(Skill.SLAYER, 70));
+        Recommendation candidate = find(TestFixtures.questCandidateProvider(
+                new QuestPriorityCatalog()).candidates(context(preparing,
+                        GoalType.MOONS_GRIND_READY)));
+
+        assertNotNull(candidate);
+        assertEquals("quest:perilous-moons", candidate.getId());
+        assertTrue(candidate.getGuidance().getAction().startsWith(
+                "Obtain a knife, big fishing net, rope, and pestle and mortar"));
+        assertTrue(new ActionabilityPolicy().canLeadQueue(candidate));
+
+        List<Recommendation> queue = moonsStrategyEngine().evaluate(preparing,
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.MOONS_GRIND_READY,
+                false, false, new PreferenceProfile()).getRecommendations();
+        assertFalse(queue.isEmpty());
+        assertEquals("quest:perilous-moons", queue.get(0).getId());
+    }
+
+    @Test
+    public void unfinishedTwilightPromiseLeadsBeforePerilousMoons()
+    {
+        GameData blocked = data(0, Membership.P2P,
+                QuestStatus.NOT_STARTED, QuestStatus.NOT_STARTED,
+                checkNeeded(), true,
+                Collections.singletonMap(Skill.SLAYER, 70));
+        Recommendation candidate = find(TestFixtures.questCandidateProvider(
+                new QuestPriorityCatalog()).candidates(context(blocked,
+                        GoalType.MOONS_GRIND_READY)));
+
+        assertNotNull(candidate);
+        assertEquals("quest:twilight-s-promise", candidate.getId());
+        assertNull(find(provider.candidates(context(blocked,
+                GoalType.MOONS_GRIND_READY))));
+
+        List<Recommendation> queue = moonsStrategyEngine().evaluate(blocked,
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.MOONS_GRIND_READY,
+                false, false, new PreferenceProfile()).getRecommendations();
+        assertFalse(queue.isEmpty());
+        assertEquals("quest:twilight-s-promise", queue.get(0).getId());
+        assertTrue(new ActionabilityPolicy().canLeadQueue(queue.get(0)));
+    }
+
+    @Test
+    public void freshVarlamoreAccountLeadsWithChildrenOfTheSun()
+    {
+        GameData blocked = data(0, Membership.P2P,
+                QuestStatus.NOT_STARTED, QuestStatus.NOT_STARTED,
+                QuestStatus.NOT_STARTED, checkNeeded(), true,
+                Collections.singletonMap(Skill.SLAYER, 70));
+        Recommendation candidate = find(TestFixtures.questCandidateProvider(
+                new QuestPriorityCatalog()).candidates(context(blocked,
+                        GoalType.MOONS_GRIND_READY)));
+
+        assertNotNull(candidate);
+        assertEquals("quest:children-of-the-sun", candidate.getId());
+        assertTrue(new ActionabilityPolicy().canLeadQueue(candidate));
+
+        List<Recommendation> queue = moonsStrategyEngine().evaluate(blocked,
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.MOONS_GRIND_READY,
+                false, false, new PreferenceProfile()).getRecommendations();
+        assertFalse(queue.isEmpty());
+        assertEquals("quest:children-of-the-sun", queue.get(0).getId());
+    }
+
+    @Test
+    public void rawQuestRequirementDumpStillCannotLeadDoNext()
+    {
+        Recommendation raw = new Recommendation("quest:raw", "Quest: Raw",
+                "Unresolved raw requirements.", 100.0,
+                Confidence.CHECK_NEEDED,
+                new Guidance("Required items: unknown setup.",
+                        "Access requirements: unknown.", "Unknown.", null),
+                Safety.harmless(false));
+
+        assertFalse(new ActionabilityPolicy().canLeadQueue(raw));
+
+        Recommendation unknownPrerequisite = new Recommendation(
+                "quest:unknown-prerequisite", "Quest: Unknown prerequisite",
+                "Prerequisite state is unknown.", 100.0,
+                Confidence.CHECK_NEEDED,
+                new Guidance("Verify and complete prerequisite quest: Unknown.",
+                        "Quest completion is unobserved.", "Unknown.", null),
+                Safety.harmless(false));
+        assertFalse(new ActionabilityPolicy().canLeadQueue(
+                unknownPrerequisite));
+    }
+
+    @Test
+    public void completedQuestWithUnobservedSetupProducesExactVerification()
+    {
+        Recommendation candidate = find(provider.candidates(context(
+                data(0, Membership.P2P, QuestStatus.COMPLETE,
+                        checkNeeded(), false),
+                GoalType.MOONS_GRIND_READY)));
+
+        assertNotNull(candidate);
+        assertEquals("verify:pvm:lunar_chests", candidate.getId());
+        assertEquals(Confidence.CHECK_NEEDED, candidate.getConfidence());
+        assertTrue(candidate.getGuidance().getAction()
+                .contains("live equipment and inventory"));
+        assertFalse(candidate.getGuidance().getNote().contains("ready"));
+        assertTrue(new ActionabilityPolicy().canLeadQueue(candidate));
+    }
+
+    @Test
+    public void observedUnderpreparedSetupNamesRepeatableFarmWork()
+    {
+        Recommendation candidate = find(provider.candidates(context(
+                data(1, Membership.P2P, QuestStatus.COMPLETE,
+                        checkNeeded(), true),
+                GoalType.MOONS_GRIND_READY)));
+
+        assertNotNull(candidate);
+        assertEquals("prepare:pvm:lunar_chests", candidate.getId());
+        assertTrue(candidate.getGuidance().getAction()
+                .contains("Equip stab, crush, and slash options"));
+        assertTrue(candidate.getGuidance().getSupplies()
+                .contains("moonlight-potion"));
+        assertTrue(candidate.getGuidance().getLocation()
+                .contains("calcified moth"));
+        assertTrue(candidate.getGuidance().getLocation()
+                .contains("northern end"));
+        assertFalse(candidate.getGuidance().getAction()
+                .toLowerCase().contains("grand exchange"));
+        assertTrue(new ActionabilityPolicy().canLeadQueue(candidate));
+
+        Recommendation attached = new GoalDependencyProvenanceService()
+                .attach(candidate, context(data(1, Membership.P2P,
+                        QuestStatus.COMPLETE, checkNeeded(), true),
+                        GoalType.MOONS_GRIND_READY));
+        assertNotNull(attached.getGoalProvenance());
+        assertEquals(GoalRelation.DIRECT,
+                attached.getGoalProvenance().getRelationship());
+    }
+
+    @Test
+    public void verifiedReadinessProducesDirectEncounterCandidate()
+    {
+        GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                checkNeeded(), true);
+        ItemsState equipment = new ItemsState(java.util.Arrays.asList(
+                equipped("Rune longsword", EquipmentInventorySlot.WEAPON),
+                equipped("Rune platebody", EquipmentInventorySlot.BODY),
+                equipped("Rune platelegs", EquipmentInventorySlot.LEGS)));
+        ItemsState inventory = new ItemsState(Collections.singletonList(
+                new ItemState(2, "Dragon mace", 1)));
+        PvmReadiness analyzed = new PvmReadinessAnalyzer(
+                new PvmActivityCatalog(), new PvmEvidenceProfileCatalog(),
+                new PvmPreparationProfileCatalog()).analyze(
+                        base.account(), base.quests(), equipment, inventory,
+                        null, null).readinessFor(ACTIVITY);
+        assertTrue(analyzed.isReadyForRecommendation());
+
+        Recommendation candidate = find(provider.candidates(context(
+                data(0, Membership.P2P, QuestStatus.COMPLETE,
+                        analyzed, true),
+                GoalType.MOONS_GRIND_READY)));
+
+        assertNotNull(candidate);
+        assertEquals(ACTIVITY, candidate.getId());
+        assertEquals(Confidence.VERIFIED, candidate.getConfidence());
+        assertTrue(candidate.getReason()
+                .contains("without claiming player execution skill"));
+        assertFalse(candidate.getReason().contains("carried supplies"));
+        assertTrue(new ActionabilityPolicy().canLeadQueue(candidate));
+    }
+
+    @Test
+    public void repeatableDungeonSuppliesRequireReviewedSkillQuality()
+    {
+        PvmReadiness underprepared = supplyReadiness(30, 38, 20, 20);
+        assertFalse(underprepared.isReadyForRecommendation());
+        assertTrue(underprepared.getMissingRequirements().contains("Cooking 60"));
+        assertTrue(underprepared.getMissingRequirements().contains("Herblore 55"));
+        assertTrue(underprepared.getMissingRequirements().contains(
+                "Hunter 50 or Fishing 60"));
+
+        assertTrue(supplyReadiness(60, 55, 50, 20)
+                .isReadyForRecommendation());
+        assertTrue(supplyReadiness(60, 55, 20, 60)
+                .isReadyForRecommendation());
+    }
+
+    @Test
+    public void repeatableFarmCombatFloorExceedsQuestAccess()
+    {
+        PvmReadiness initialClear = combatReadiness(60, 60, 60);
+        assertFalse(initialClear.isReadyForRecommendation());
+        assertTrue(initialClear.getMissingRequirements().contains("Attack 70"));
+        assertTrue(initialClear.getMissingRequirements().contains("Strength 70"));
+        assertTrue(initialClear.getMissingRequirements().contains("Defence 70"));
+        assertTrue(combatReadiness(70, 70, 70)
+                .isReadyForRecommendation());
+    }
+
+    @Test
+    public void selectedGoalProducesTypedGlobalDoNext()
+    {
+        PvmReadiness readiness = new PvmReadiness(ACTIVITY, true,
+                Confidence.VERIFIED, Collections.emptyList());
+        CandidateProvider generic = context -> Collections.singletonList(
+                new Recommendation("generic:progress", "Generic progress",
+                        "Useful but unrelated account progress.", 80.0,
+                        Confidence.VERIFIED,
+                        new Guidance("Do the generic step.", "Ready.",
+                                "Safe location.", "Generic progress."),
+                        Safety.harmless(false)));
+        StrategyEngine engine = TestFixtures.strategyEngine(null, null, null,
+                new StrategyCandidateRegistry(java.util.Arrays.asList(
+                        provider, generic)), new ActionabilityPolicy(),
+                new RecommendationIntelligenceService(),
+                new CandidateSafetyPolicy(),
+                new GoalDependencyProvenanceService());
+
+        List<Recommendation> queue = engine.evaluate(
+                data(0, Membership.P2P, QuestStatus.COMPLETE,
+                        readiness, true),
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.MOONS_GRIND_READY,
+                false, false, new PreferenceProfile()).getRecommendations();
+
+        assertFalse(queue.isEmpty());
+        assertEquals(ACTIVITY, queue.get(0).getId());
+        assertNotNull(queue.get(0).getGoalProvenance());
+        assertEquals(GoalRelation.DIRECT,
+                queue.get(0).getGoalProvenance().getRelationship());
+    }
+
+    @Test
+    public void goalSwitchingClearsAndRestoresMoonsDoNext()
+    {
+        PvmReadiness readiness = new PvmReadiness(ACTIVITY, true,
+                Confidence.VERIFIED, Collections.emptyList());
+        GameData ready = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                readiness, true);
+        StrategyEngine engine = moonsStrategyEngine();
+
+        List<Recommendation> selected = engine.evaluate(ready,
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.MOONS_GRIND_READY,
+                false, false, new PreferenceProfile()).getRecommendations();
+        assertFalse(selected.isEmpty());
+        assertEquals(ACTIVITY, selected.get(0).getId());
+
+        List<Recommendation> automatic = engine.evaluate(ready,
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.AUTOMATIC,
+                false, false, new PreferenceProfile()).getRecommendations();
+        Recommendation automaticMoons = automatic.stream()
+                .filter(recommendation -> ACTIVITY.equals(
+                        recommendation.getId()))
+                .findFirst().orElse(null);
+        assertNotNull(automaticMoons);
+        assertNull(automaticMoons.getGoalProvenance());
+
+        List<Recommendation> restored = engine.evaluate(ready,
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.MOONS_GRIND_READY,
+                false, false, new PreferenceProfile()).getRecommendations();
+        assertFalse(restored.isEmpty());
+        assertEquals(ACTIVITY, restored.get(0).getId());
+        assertNotNull(restored.get(0).getGoalProvenance());
+        assertEquals(GoalRelation.DIRECT,
+                restored.get(0).getGoalProvenance().getRelationship());
+    }
+
+    @Test
+    public void analyzerKeepsIncompleteStyleAndArmourEvidenceInPreparation()
+    {
+        GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                checkNeeded(), true);
+        PvmReadiness analyzed = new PvmReadinessAnalyzer(
+                new PvmActivityCatalog(), new PvmEvidenceProfileCatalog(),
+                new PvmPreparationProfileCatalog()).analyze(
+                        base.account(), base.quests(),
+                        new ItemsState(Collections.singletonList(
+                                equipped("Rune scimitar",
+                                        EquipmentInventorySlot.WEAPON))),
+                        new ItemsState(Collections.emptyList()), null, null)
+                .readinessFor(ACTIVITY);
+
+        assertFalse(analyzed.isReadyForRecommendation());
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("crush")));
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("body armour")));
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("leg armour")));
+    }
+
+    @Test
+    public void liveSetupProgressionClearsStaleMoonsPreparation()
+    {
+        GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                checkNeeded(), true);
+        PvmReadinessAnalyzer analyzer = new PvmReadinessAnalyzer(
+                new PvmActivityCatalog(), new PvmEvidenceProfileCatalog(),
+                new PvmPreparationProfileCatalog());
+        PvmSnapshot preparing = analyzer.analyze(
+                base.account(), base.quests(),
+                new ItemsState(Collections.singletonList(
+                        equipped("Rune scimitar",
+                                EquipmentInventorySlot.WEAPON))),
+                new ItemsState(Collections.emptyList()), null, null);
+        assertFalse(preparing.readinessFor(ACTIVITY)
+                .isReadyForRecommendation());
+
+        ItemsState equipment = new ItemsState(java.util.Arrays.asList(
+                equipped("Rune longsword", EquipmentInventorySlot.WEAPON),
+                equipped("Rune platebody", EquipmentInventorySlot.BODY),
+                equipped("Rune platelegs", EquipmentInventorySlot.LEGS)));
+        ItemsState inventory = new ItemsState(Collections.singletonList(
+                new ItemState(2, "Dragon mace", 1)));
+        PvmReadiness ready = analyzer.analyze(
+                base.account(), base.quests(), equipment, inventory,
+                null, preparing).readinessFor(ACTIVITY);
+
+        assertTrue(ready.isReadyForRecommendation());
+        assertTrue(ready.getMissingRequirements().isEmpty());
+    }
+
+    @Test
+    public void foodAndUtilityToolsCannotMasqueradeAsMeleeSwitches()
+    {
+        GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                checkNeeded(), true);
+        ItemsState equipment = new ItemsState(java.util.Arrays.asList(
+                equipped("Rune scimitar", EquipmentInventorySlot.WEAPON),
+                equipped("Rune platebody", EquipmentInventorySlot.BODY),
+                equipped("Rune platelegs", EquipmentInventorySlot.LEGS)));
+        ItemsState inventory = new ItemsState(java.util.Arrays.asList(
+                new ItemState(1, "Swordfish", 10),
+                new ItemState(2, "Hammer", 1)));
+
+        PvmReadiness analyzed = new PvmReadinessAnalyzer(
+                new PvmActivityCatalog(), new PvmEvidenceProfileCatalog(),
+                new PvmPreparationProfileCatalog()).analyze(
+                        base.account(), base.quests(), equipment, inventory,
+                        null, null).readinessFor(ACTIVITY);
+
+        assertFalse(analyzed.isReadyForRecommendation());
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("stab")));
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("crush")));
+    }
+
+    @Test
+    public void nonDefensiveSlotItemsCannotMasqueradeAsMoonsArmour()
+    {
+        GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                checkNeeded(), true);
+        ItemsState equipment = new ItemsState(java.util.Arrays.asList(
+                equipped("Rune longsword", EquipmentInventorySlot.WEAPON),
+                equipped("Graceful top", EquipmentInventorySlot.BODY),
+                equipped("Graceful legs", EquipmentInventorySlot.LEGS)));
+        ItemsState inventory = new ItemsState(Collections.singletonList(
+                new ItemState(2, "Dragon mace", 1)));
+
+        PvmReadiness analyzed = new PvmReadinessAnalyzer(
+                new PvmActivityCatalog(), new PvmEvidenceProfileCatalog(),
+                new PvmPreparationProfileCatalog()).analyze(
+                        base.account(), base.quests(), equipment, inventory,
+                        null, null).readinessFor(ACTIVITY);
+
+        assertFalse(analyzed.isReadyForRecommendation());
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("body armour")));
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("leg armour")));
+    }
+
+    @Test
+    public void weaponComponentsCannotMasqueradeAsMoonsStyleOptions()
+    {
+        GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                checkNeeded(), true);
+        ItemsState equipment = new ItemsState(java.util.Arrays.asList(
+                equipped("Rune platebody", EquipmentInventorySlot.BODY),
+                equipped("Rune platelegs", EquipmentInventorySlot.LEGS)));
+        ItemsState inventory = new ItemsState(java.util.Arrays.asList(
+                new ItemState(1, "Godsword shard 1", 1),
+                new ItemState(2, "Dragon mace", 1)));
+
+        PvmReadiness analyzed = new PvmReadinessAnalyzer(
+                new PvmActivityCatalog(), new PvmEvidenceProfileCatalog(),
+                new PvmPreparationProfileCatalog()).analyze(
+                        base.account(), base.quests(), equipment, inventory,
+                        null, null).readinessFor(ACTIVITY);
+
+        assertFalse(analyzed.isReadyForRecommendation());
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("stab")));
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("slash")));
+    }
+
+    @Test
+    public void notedWeaponsCannotMasqueradeAsCarriedMoonsSwitches()
+    {
+        GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                checkNeeded(), true);
+        ItemsState equipment = new ItemsState(java.util.Arrays.asList(
+                equipped("Rune scimitar", EquipmentInventorySlot.WEAPON),
+                equipped("Rune platebody", EquipmentInventorySlot.BODY),
+                equipped("Rune platelegs", EquipmentInventorySlot.LEGS)));
+        ItemsState inventory = new ItemsState(Collections.singletonList(
+                new ItemState(1435, "Rune mace", 1, -1, true)));
+
+        PvmReadiness analyzed = new PvmReadinessAnalyzer(
+                new PvmActivityCatalog(), new PvmEvidenceProfileCatalog(),
+                new PvmPreparationProfileCatalog()).analyze(
+                        base.account(), base.quests(), equipment, inventory,
+                        null, null).readinessFor(ACTIVITY);
+
+        assertFalse(analyzed.isReadyForRecommendation());
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("crush")));
+    }
+
+    @Test
+    public void selectionAndAccountSafetyRemainFailClosed()
+    {
+        GameData main = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                checkNeeded(), true);
+        assertNull(find(provider.candidates(context(main,
+                GoalType.AUTOMATIC))));
+        assertNotNull(find(provider.candidates(context(main,
+                GoalType.MOONS_GRIND_READY))));
+
+        assertTrue(provider.candidates(context(data(0, Membership.F2P,
+                QuestStatus.COMPLETE, checkNeeded(), true),
+                GoalType.MOONS_GRIND_READY)).isEmpty());
+        assertTrue(provider.candidates(context(data(3, Membership.P2P,
+                QuestStatus.COMPLETE, checkNeeded(), true),
+                GoalType.MOONS_GRIND_READY)).isEmpty());
+
+        Recommendation uim = find(provider.candidates(context(data(2,
+                Membership.P2P, QuestStatus.COMPLETE, checkNeeded(), true),
+                GoalType.MOONS_GRIND_READY)));
+        assertNotNull(uim);
+        assertFalse(uim.getGuidance().getAction().toLowerCase()
+                .contains("bank"));
+    }
+
+    @Test
+    public void everyAccountModeUsesTheMoonsSafetyBoundary()
+    {
+        CandidateSafetyPolicy safety = new CandidateSafetyPolicy();
+        for (int type : new int[] {0, 1, 2, 4, 6})
+        {
+            StrategyContext context = context(data(type, Membership.P2P,
+                    QuestStatus.COMPLETE, checkNeeded(), true),
+                    GoalType.MOONS_GRIND_READY);
+            Recommendation candidate = find(provider.candidates(context));
+            assertNotNull(AccountMode.fromTypeCode(type).name(), candidate);
+            assertTrue(AccountMode.fromTypeCode(type).name(),
+                    safety.isAllowed(candidate, context));
+            String guidance = candidate.getGuidance().getAction().toLowerCase();
+            assertFalse(guidance.contains("grand exchange"));
+            assertFalse(guidance.contains("group storage"));
+        }
+
+        for (int type : new int[] {3, 5})
+        {
+            assertTrue(AccountMode.fromTypeCode(type).name(),
+                    provider.candidates(context(data(type, Membership.P2P,
+                            QuestStatus.COMPLETE, checkNeeded(), true),
+                            GoalType.MOONS_GRIND_READY)).isEmpty());
+        }
+
+        StrategyContext unknown = context(data(99, Membership.P2P,
+                QuestStatus.COMPLETE, checkNeeded(), true),
+                GoalType.MOONS_GRIND_READY);
+        Recommendation candidate = find(provider.candidates(unknown));
+        assertNotNull(candidate);
+        assertFalse(safety.isAllowed(candidate, unknown));
+    }
+
+    private static PvmReadiness checkNeeded()
+    {
+        return new PvmReadiness(ACTIVITY, false, Confidence.CHECK_NEEDED,
+                Collections.singletonList(
+                        "Equip stab, crush, and slash options and verify supplies"));
+    }
+
+    private static StrategyContext context(GameData data, GoalType goal)
+    {
+        return new StrategyContext(data, StrategyMode.BALANCED,
+                SessionIntent.LONG_SESSION, QuestTolerance.NORMAL, goal,
+                false, false, new PreferenceProfile());
+    }
+
+    private static GameData data(int type, Membership membership,
+            QuestStatus questStatus, PvmReadiness readiness,
+            boolean observedSetup)
+    {
+        return data(type, membership, questStatus, readiness, observedSetup,
+                Collections.emptyMap());
+    }
+
+    private static GameData data(int type, Membership membership,
+            QuestStatus questStatus, PvmReadiness readiness,
+            boolean observedSetup, Map<Skill, Integer> levelOverrides)
+    {
+        return data(type, membership, QuestStatus.COMPLETE, questStatus,
+                readiness, observedSetup, levelOverrides);
+    }
+
+    private static GameData data(int type, Membership membership,
+            QuestStatus twilightStatus, QuestStatus questStatus,
+            PvmReadiness readiness, boolean observedSetup)
+    {
+        return data(type, membership, twilightStatus, questStatus, readiness,
+                observedSetup, Collections.emptyMap());
+    }
+
+    private static GameData data(int type, Membership membership,
+            QuestStatus twilightStatus, QuestStatus questStatus,
+            PvmReadiness readiness, boolean observedSetup,
+            Map<Skill, Integer> levelOverrides)
+    {
+        return data(type, membership, QuestStatus.COMPLETE, twilightStatus,
+                questStatus, readiness, observedSetup, levelOverrides);
+    }
+
+    private static GameData data(int type, Membership membership,
+            QuestStatus childrenStatus, QuestStatus twilightStatus,
+            QuestStatus questStatus, PvmReadiness readiness,
+            boolean observedSetup, Map<Skill, Integer> levelOverrides)
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
+        for (Skill skill : Skill.values())
+        {
+            levels.put(skill, skill == Skill.SLAYER ? 40 : 70);
+            xp.put(skill, 0);
+        }
+        levels.putAll(levelOverrides);
+        AccountSnapshot account = new AccountSnapshot("Moons", 901L,
+                type, AccountMode.fromTypeCode(type).name(), membership,
+                membership == Membership.P2P ? 1 : 0,
+                70 * Skill.values().length, 0L, levels, xp);
+        Map<String, QuestStatus> quests = new HashMap<>();
+        quests.put("Children of the Sun", childrenStatus);
+        quests.put("Twilight's Promise", twilightStatus);
+        quests.put("Perilous Moons", questStatus);
+        Map<String, PvmReadiness> readinessByActivity = new HashMap<>();
+        readinessByActivity.put(ACTIVITY, readiness);
+        ItemsState setup = observedSetup
+                ? new ItemsState(Collections.emptyList())
+                : ItemsState.unknown();
+        return GameData.builder(account)
+                .quests(new QuestSnapshot(quests))
+                .equipment(setup)
+                .inventory(setup)
+                .pvm(new PvmSnapshot(readinessByActivity))
+                .build();
+    }
+
+    private static PvmReadiness supplyReadiness(int cooking, int herblore,
+            int hunter, int fishing)
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        levels.put(Skill.COOKING, cooking);
+        levels.put(Skill.HERBLORE, herblore);
+        levels.put(Skill.HUNTER, hunter);
+        levels.put(Skill.FISHING, fishing);
+        return readiness(levels);
+    }
+
+    private static PvmReadiness combatReadiness(int attack, int strength,
+            int defence)
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        levels.put(Skill.ATTACK, attack);
+        levels.put(Skill.STRENGTH, strength);
+        levels.put(Skill.DEFENCE, defence);
+        levels.put(Skill.COOKING, 60);
+        levels.put(Skill.HERBLORE, 55);
+        levels.put(Skill.HUNTER, 50);
+        return readiness(levels);
+    }
+
+    private static PvmReadiness readiness(Map<Skill, Integer> levels)
+    {
+        GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                checkNeeded(), true, levels);
+        ItemsState equipment = new ItemsState(java.util.Arrays.asList(
+                equipped("Rune longsword", EquipmentInventorySlot.WEAPON),
+                equipped("Rune platebody", EquipmentInventorySlot.BODY),
+                equipped("Rune platelegs", EquipmentInventorySlot.LEGS)));
+        ItemsState inventory = new ItemsState(Collections.singletonList(
+                new ItemState(2, "Dragon mace", 1)));
+        return new PvmReadinessAnalyzer(new PvmActivityCatalog(),
+                new PvmEvidenceProfileCatalog(),
+                new PvmPreparationProfileCatalog()).analyze(
+                        base.account(), base.quests(), equipment, inventory,
+                        null, null).readinessFor(ACTIVITY);
+    }
+
+    private static Recommendation find(List<Recommendation> candidates)
+    {
+        return candidates.isEmpty() ? null : candidates.get(0);
+    }
+
+    private static StrategyEngine moonsStrategyEngine()
+    {
+        TrainingMethodSelector selector = new TrainingMethodSelector(
+                new TrainingMethodCatalog(),
+                new RequirementEvidenceEngine(
+                        new FarmingAccessEvaluator(new FarmingAccessCatalog()),
+                        new AgilityAccessEvaluator(new AgilityCourseCatalog()),
+                        new FarmingSupplyCatalog(),
+                        new RunecraftSupplyCatalog()),
+                new TrainingMethodPolicy(),
+                new MethodStrategyKnowledgeCatalog(),
+                new UimInventoryResolutionService());
+        StrategyCandidateRegistry registry = new StrategyCandidateRegistry(
+                java.util.Arrays.asList(new PvmCandidateProvider(),
+                        TestFixtures.questCandidateProvider(
+                                new QuestPriorityCatalog())));
+        return TestFixtures.strategyEngine(
+                TestFixtures.recommendationEngine(selector), null, null,
+                registry, new ActionabilityPolicy(),
+                new RecommendationIntelligenceService(),
+                new CandidateSafetyPolicy(),
+                new GoalDependencyProvenanceService());
+    }
+
+    private static ItemState equipped(String name,
+            EquipmentInventorySlot slot)
+    {
+        return new ItemState(1, name, 1, slot.getSlotIdx());
+    }
+}

@@ -89,7 +89,7 @@ public class RecommendationDeduplicatorTest
     {
         Skill skill = title.contains("Fishing") ? Skill.FISHING
                 : title.contains("Mining") ? Skill.MINING : Skill.AGILITY;
-        TrainingMethod method = new TrainingMethod(id + ":method", skill,
+        TrainingMethod method = new TrainingMethod("shared:" + skill.name(), skill,
                 1, 99, title, "Do the method.", 1, 1, 1,
                 AttentionLevel.LOW, 20, 2, Collections.emptyList(),
                 Confidence.VERIFIED);

@@ -1,0 +1,1003 @@
+[
+  {
+    "recipes": [
+      {
+        "id": "shrimp",
+        "skill": "COOKING",
+        "level": 1,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw shrimps on the named range.",
+        "efficientBatch": 28,
+        "inputRecipe": "shrimps"
+      },
+      {
+        "id": "sardine",
+        "skill": "COOKING",
+        "level": 1,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw sardine on the named range.",
+        "efficientBatch": 28,
+        "inputRecipe": "sardine"
+      },
+      {
+        "id": "herring",
+        "skill": "COOKING",
+        "level": 5,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw herring on the named range.",
+        "efficientBatch": 28,
+        "inputRecipe": "herring"
+      },
+      {
+        "id": "trout",
+        "skill": "COOKING",
+        "level": 15,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw trout on the named range.",
+        "efficientBatch": 28,
+        "inputRecipe": "trout"
+      },
+      {
+        "id": "pike",
+        "skill": "COOKING",
+        "level": 20,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw pike on the named range.",
+        "efficientBatch": 28,
+        "inputRecipe": "pike"
+      },
+      {
+        "id": "salmon",
+        "skill": "COOKING",
+        "level": 25,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw salmon on the named range.",
+        "efficientBatch": 28,
+        "inputRecipe": "salmon"
+      },
+      {
+        "id": "tuna",
+        "skill": "COOKING",
+        "level": 30,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw tuna on the named range.",
+        "efficientBatch": 28,
+        "inputRecipe": "tuna"
+      },
+      {
+        "id": "lobster",
+        "skill": "COOKING",
+        "level": 40,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw lobster on the named range.",
+        "efficientBatch": 28,
+        "inputRecipe": "lobster"
+      },
+      {
+        "id": "swordfish",
+        "skill": "COOKING",
+        "level": 45,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw swordfish on the named range.",
+        "efficientBatch": 28,
+        "inputRecipe": "swordfish"
+      },
+      {
+        "id": "wine",
+        "skill": "COOKING",
+        "level": 35,
+        "workingBatch": 4,
+        "maximumBatch": 14,
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "each unfermented jug, including any bad wine after fermentation",
+        "action": "Use grapes on jugs of water; wait for fermentation before reviewing the batch.",
+        "efficientBatch": 14,
+        "inputRecipe": "jug of wine"
+      },
+      {
+        "id": "regular_arrow_shafts",
+        "skill": "FLETCHING",
+        "level": 1,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 15,
+        "outputStackable": true,
+        "outputItemId": 52,
+        "outputDescription": "the arrow shaft stack and reusable knife",
+        "action": "Use a knife on logs and select arrow shafts.",
+        "inputRecipe": "arrow shaft"
+      },
+      {
+        "id": "oak_arrow_shafts",
+        "skill": "FLETCHING",
+        "level": 15,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 30,
+        "outputStackable": true,
+        "outputItemId": 52,
+        "outputDescription": "the arrow shaft stack and reusable knife",
+        "action": "Use a knife on oak logs and select arrow shafts.",
+        "inputRecipe": "arrow shafts from oak logs"
+      },
+      {
+        "id": "shortbow_cutting",
+        "skill": "FLETCHING",
+        "level": 5,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 50,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Shortbow (u).",
+        "inputRecipe": "shortbow (u)"
+      },
+      {
+        "id": "longbow_cutting",
+        "skill": "FLETCHING",
+        "level": 10,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 48,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Longbow (u).",
+        "inputRecipe": "longbow (u)"
+      },
+      {
+        "id": "oak_shortbow_cutting",
+        "skill": "FLETCHING",
+        "level": 20,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 54,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Oak shortbow (u).",
+        "inputRecipe": "oak shortbow (u)"
+      },
+      {
+        "id": "oak_longbow_cutting",
+        "skill": "FLETCHING",
+        "level": 25,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 56,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Oak longbow (u).",
+        "inputRecipe": "oak longbow (u)"
+      },
+      {
+        "id": "willow_shortbow_cutting",
+        "skill": "FLETCHING",
+        "level": 35,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 60,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Willow shortbow (u).",
+        "inputRecipe": "willow shortbow (u)"
+      },
+      {
+        "id": "willow_longbow_cutting",
+        "skill": "FLETCHING",
+        "level": 40,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 58,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Willow longbow (u).",
+        "inputRecipe": "willow longbow (u)"
+      },
+      {
+        "id": "maple_shortbow_cutting",
+        "skill": "FLETCHING",
+        "level": 50,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 64,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Maple shortbow (u).",
+        "inputRecipe": "maple shortbow (u)"
+      },
+      {
+        "id": "maple_longbow_cutting",
+        "skill": "FLETCHING",
+        "level": 55,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 62,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Maple longbow (u).",
+        "inputRecipe": "maple longbow (u)"
+      },
+      {
+        "id": "yew_shortbow_cutting",
+        "skill": "FLETCHING",
+        "level": 65,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 68,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Yew shortbow (u).",
+        "inputRecipe": "yew shortbow (u)"
+      },
+      {
+        "id": "yew_longbow_cutting",
+        "skill": "FLETCHING",
+        "level": 70,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 66,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Yew longbow (u).",
+        "inputRecipe": "yew longbow (u)"
+      },
+      {
+        "id": "magic_shortbow_cutting",
+        "skill": "FLETCHING",
+        "level": 80,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 72,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Magic shortbow (u).",
+        "inputRecipe": "magic shortbow (u)"
+      },
+      {
+        "id": "magic_longbow_cutting",
+        "skill": "FLETCHING",
+        "level": 85,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 70,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Magic longbow (u).",
+        "inputRecipe": "magic longbow (u)"
+      },
+      {
+        "id": "bronze_platebody_smithing",
+        "skill": "SMITHING",
+        "level": 18,
+        "workingBatch": 5,
+        "maximumBatch": 5,
+        "efficientBatch": 5,
+        "tools": [
+          {
+            "itemId": 2347,
+            "name": "Hammer",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 1117,
+        "outputDescription": "the forged platebodies and reusable hammer",
+        "action": "Use the prepared bars on the anvil and select Bronze platebody.",
+        "inputRecipe": "bronze platebody"
+      },
+      {
+        "id": "iron_platebody_smithing",
+        "skill": "SMITHING",
+        "level": 33,
+        "workingBatch": 5,
+        "maximumBatch": 5,
+        "efficientBatch": 5,
+        "tools": [
+          {
+            "itemId": 2347,
+            "name": "Hammer",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 1115,
+        "outputDescription": "the forged platebodies and reusable hammer",
+        "action": "Use the prepared bars on the anvil and select Iron platebody.",
+        "inputRecipe": "iron platebody"
+      },
+      {
+        "id": "steel_platebody_smithing",
+        "skill": "SMITHING",
+        "level": 48,
+        "workingBatch": 5,
+        "maximumBatch": 5,
+        "efficientBatch": 5,
+        "tools": [
+          {
+            "itemId": 2347,
+            "name": "Hammer",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 1119,
+        "outputDescription": "the forged platebodies and reusable hammer",
+        "action": "Use the prepared bars on the anvil and select Steel platebody.",
+        "inputRecipe": "steel platebody"
+      },
+      {
+        "id": "mithril_platebody_smithing",
+        "skill": "SMITHING",
+        "level": 68,
+        "workingBatch": 5,
+        "maximumBatch": 5,
+        "efficientBatch": 5,
+        "tools": [
+          {
+            "itemId": 2347,
+            "name": "Hammer",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 1121,
+        "outputDescription": "the forged platebodies and reusable hammer",
+        "action": "Use the prepared bars on the anvil and select Mithril platebody.",
+        "inputRecipe": "mithril platebody"
+      },
+      {
+        "id": "adamant_platebody_smithing",
+        "skill": "SMITHING",
+        "level": 88,
+        "workingBatch": 5,
+        "maximumBatch": 5,
+        "efficientBatch": 5,
+        "tools": [
+          {
+            "itemId": 2347,
+            "name": "Hammer",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 1123,
+        "outputDescription": "the forged platebodies and reusable hammer",
+        "action": "Use the prepared bars on the anvil and select Adamant platebody.",
+        "inputRecipe": "adamant platebody"
+      },
+      {
+        "id": "rune_platebody_smithing",
+        "skill": "SMITHING",
+        "level": 99,
+        "workingBatch": 5,
+        "maximumBatch": 5,
+        "efficientBatch": 5,
+        "tools": [
+          {
+            "itemId": 2347,
+            "name": "Hammer",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 1127,
+        "outputDescription": "the forged platebodies and reusable hammer",
+        "action": "Use the prepared bars on the anvil and select Rune platebody.",
+        "inputRecipe": "rune platebody"
+      },
+      {
+        "id": "normal_logs_firemaking",
+        "skill": "FIREMAKING",
+        "level": 1,
+        "workingBatch": 1,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "inputs": [
+          {
+            "itemId": 1511,
+            "name": "Logs",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "tools": [
+          {
+            "itemId": 590,
+            "name": "Tinderbox",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 0,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the reusable tinderbox; ashes are not assumed collected",
+        "action": "Use the tinderbox on the prepared normal logs."
+      },
+      {
+        "id": "oak_logs_firemaking",
+        "skill": "FIREMAKING",
+        "level": 15,
+        "workingBatch": 1,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "inputs": [
+          {
+            "itemId": 1521,
+            "name": "Oak logs",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "tools": [
+          {
+            "itemId": 590,
+            "name": "Tinderbox",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 0,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the reusable tinderbox; ashes are not assumed collected",
+        "action": "Use the tinderbox on the prepared oak logs."
+      },
+      {
+        "id": "willow_logs_firemaking",
+        "skill": "FIREMAKING",
+        "level": 30,
+        "workingBatch": 1,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "inputs": [
+          {
+            "itemId": 1519,
+            "name": "Willow logs",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "tools": [
+          {
+            "itemId": 590,
+            "name": "Tinderbox",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 0,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the reusable tinderbox; ashes are not assumed collected",
+        "action": "Use the tinderbox on the prepared willow logs."
+      },
+      {
+        "id": "maple_logs_firemaking",
+        "skill": "FIREMAKING",
+        "level": 45,
+        "workingBatch": 1,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "inputs": [
+          {
+            "itemId": 1517,
+            "name": "Maple logs",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "tools": [
+          {
+            "itemId": 590,
+            "name": "Tinderbox",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 0,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the reusable tinderbox; ashes are not assumed collected",
+        "action": "Use the tinderbox on the prepared maple logs."
+      },
+      {
+        "id": "yew_logs_firemaking",
+        "skill": "FIREMAKING",
+        "level": 60,
+        "workingBatch": 1,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "inputs": [
+          {
+            "itemId": 1515,
+            "name": "Yew logs",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "tools": [
+          {
+            "itemId": 590,
+            "name": "Tinderbox",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 0,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the reusable tinderbox; ashes are not assumed collected",
+        "action": "Use the tinderbox on the prepared yew logs."
+      },
+      {
+        "id": "normal_bones_burial",
+        "skill": "PRAYER",
+        "level": 1,
+        "workingBatch": 1,
+        "maximumBatch": 28,
+        "efficientBatch": 28,
+        "inputs": [
+          {
+            "itemId": 526,
+            "name": "Bones",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "tools": [],
+        "outputsPerAction": 0,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "no retained inventory output",
+        "action": "Bury the prepared normal bones."
+      }
+    ],
+    "methods": [
+      {
+        "ids": [
+          "cooking_f2p_fish",
+          "cooking_f2p_fish_baseline"
+        ],
+        "recipes": [
+          "shrimp",
+          "sardine",
+          "herring",
+          "trout",
+          "pike",
+          "salmon",
+          "tuna",
+          "lobster",
+          "swordfish"
+        ],
+        "bankLoop": true,
+        "purchaseAllowed": true,
+        "membersOnly": false,
+        "location": "Al Kharid bank and the range immediately north of it. Retrieve only this batch; retain outputs and recheck before repeating.",
+        "source": "https://oldschool.runescape.wiki/w/Free-to-play_Cooking_training",
+        "reviewed": "2026-09-30",
+        "sourceRevision": 15352306
+      },
+      {
+        "ids": [
+          "cooking_wines"
+        ],
+        "recipes": [
+          "wine"
+        ],
+        "bankLoop": true,
+        "purchaseAllowed": true,
+        "membersOnly": false,
+        "location": "Grand Exchange bank: combine the prepared ingredients and retain the fermenting jugs.",
+        "source": "https://oldschool.runescape.wiki/w/Jug_of_wine",
+        "reviewed": "2026-09-30",
+        "sourceRevision": 15333576
+      },
+      {
+        "ids": [
+          "cooking_hosidius"
+        ],
+        "recipes": [
+          "shrimp",
+          "sardine",
+          "herring",
+          "trout",
+          "pike",
+          "salmon",
+          "tuna",
+          "lobster",
+          "swordfish"
+        ],
+        "bankLoop": true,
+        "purchaseAllowed": true,
+        "membersOnly": true,
+        "diaryRegion": "Kourend & Kebos",
+        "diaryTier": "EASY",
+        "location": "Hosidius Kitchen bank chest and range. Retain outputs; review the next batch before withdrawing.",
+        "source": "https://oldschool.runescape.wiki/w/Hosidius_Kitchen",
+        "reviewed": "2026-09-30",
+        "sourceRevision": 15317135
+      },
+      {
+        "ids": [
+          "cooking_f2p_uim_carried_fish"
+        ],
+        "recipes": [
+          "shrimp",
+          "sardine",
+          "herring",
+          "trout",
+          "pike",
+          "salmon",
+          "tuna",
+          "lobster",
+          "swordfish"
+        ],
+        "bankLoop": false,
+        "purchaseAllowed": false,
+        "membersOnly": false,
+        "location": "Al Kharid range immediately north of the bank: process only carried raw fish and retain the cooked or burnt outputs.",
+        "source": "https://oldschool.runescape.wiki/w/Free-to-play_Cooking_training",
+        "reviewed": "2026-09-30",
+        "sourceRevision": 15352306
+      },
+      {
+        "ids": [
+          "cooking_karambwan_1t"
+        ],
+        "recipes": [],
+        "bankLoop": true,
+        "purchaseAllowed": false,
+        "membersOnly": true,
+        "requiredQuest": "Tai Bwo Wannai Trio",
+        "unresolved": "The post-quest cooking lesson and one-tick execution setup are not observed. Do not assume readiness from raw karambwans alone.",
+        "location": "No verified execution route yet.",
+        "source": "https://oldschool.runescape.wiki/w/Money_making_guide/Cooking_raw_karambwan",
+        "reviewed": "2026-09-30",
+        "sourceRevision": 15075253
+      },
+      {
+        "ids": [
+          "cooking_gnome_restaurant"
+        ],
+        "recipes": [],
+        "bankLoop": false,
+        "purchaseAllowed": false,
+        "membersOnly": true,
+        "unresolved": "The live delivery order, recipe ingredients and destination access are not observed.",
+        "location": "No verified delivery route yet.",
+        "source": "https://oldschool.runescape.wiki/w/Gnome_Restaurant",
+        "reviewed": "2026-09-30",
+        "sourceRevision": 15345783
+      },
+      {
+        "ids": [
+          "fletching_arrow_shafts"
+        ],
+        "recipes": [
+          "regular_arrow_shafts",
+          "oak_arrow_shafts"
+        ],
+        "bankLoop": false,
+        "bankSupplies": true,
+        "purchaseAllowed": true,
+        "membersOnly": true,
+        "location": "Use the knife on logs where you collected or withdrew them; no special facility is needed. Retain the arrow shafts.",
+        "source": "https://oldschool.runescape.wiki/w/Arrow_shaft",
+        "reviewed": "2026-09-30",
+        "sourceRevision": 15332152
+      },
+      {
+        "ids": [
+          "fletching_bows"
+        ],
+        "recipes": [
+          "shortbow_cutting",
+          "longbow_cutting",
+          "oak_shortbow_cutting",
+          "oak_longbow_cutting",
+          "willow_shortbow_cutting",
+          "willow_longbow_cutting",
+          "maple_shortbow_cutting",
+          "maple_longbow_cutting",
+          "yew_shortbow_cutting",
+          "yew_longbow_cutting",
+          "magic_shortbow_cutting",
+          "magic_longbow_cutting"
+        ],
+        "bankLoop": false,
+        "bankSupplies": true,
+        "purchaseAllowed": true,
+        "membersOnly": true,
+        "location": "Fletch where you collected or retrieved the logs. Keep the knife and unstrung bows; review supplies and occupied inventory before the next batch.",
+        "source": "https://oldschool.runescape.wiki/w/Shortbow_(u)",
+        "sourceRevision": 15184949,
+        "reviewed": "2026-09-30"
+      },
+      {
+        "ids": [
+          "firemaking_f2p_logs"
+        ],
+        "recipes": [
+          "normal_logs_firemaking",
+          "oak_logs_firemaking",
+          "willow_logs_firemaking",
+          "maple_logs_firemaking",
+          "yew_logs_firemaking"
+        ],
+        "bankLoop": false,
+        "bankSupplies": true,
+        "purchaseAllowed": true,
+        "membersOnly": false,
+        "location": "Use an open line of clear ground; the Grand Exchange south-east corner is one unrestricted F2P option.",
+        "source": "https://oldschool.runescape.wiki/w/Firemaking",
+        "sourceRevision": 15383056,
+        "reviewed": "2026-11-12"
+      },
+      {
+        "ids": [
+          "prayer_f2p_bones"
+        ],
+        "recipes": [
+          "normal_bones_burial"
+        ],
+        "bankLoop": false,
+        "bankSupplies": true,
+        "purchaseAllowed": true,
+        "membersOnly": false,
+        "location": "Bury carried normal bones wherever they were obtained; no facility is required.",
+        "source": "https://oldschool.runescape.wiki/w/Bones",
+        "sourceRevision": 15327876,
+        "reviewed": "2026-11-12"
+      },
+      {
+        "ids": [
+          "smithing_f2p_platebodies",
+          "smithing_f2p_platebody_baseline"
+        ],
+        "recipes": [
+          "bronze_platebody_smithing",
+          "iron_platebody_smithing",
+          "steel_platebody_smithing",
+          "mithril_platebody_smithing",
+          "adamant_platebody_smithing",
+          "rune_platebody_smithing"
+        ],
+        "bankLoop": true,
+        "purchaseAllowed": true,
+        "membersOnly": false,
+        "location": "Use the anvils immediately south of Varrock West Bank; retain the platebodies and hammer, then bank before another batch.",
+        "source": "https://oldschool.runescape.wiki/w/Free-to-play_Smithing_training",
+        "sourceRevision": 15260354,
+        "reviewed": "2026-10-01"
+      }
+    ]
+  }
+]

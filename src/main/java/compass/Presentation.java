@@ -42,7 +42,17 @@ public final class Presentation
         var guidance = recommendation.guidance;
         if (guidance != null)
         {
-            appendCompactGuidance(text, guidance);
+            MethodReadiness readiness = plan.readiness;
+            if (readiness != null && readiness.actionable())
+            {
+                MethodPreparation.Step next = readiness.preparation.nextAction();
+                appendCompactGuidance(text, new Guidance(
+                        next == null ? guidance.getAction() : next.action,
+                        readiness.preparation.compactSupplies(),
+                        next != null && hasText(next.location) ? next.location : guidance.location,
+                        guidance.note));
+            }
+            else appendCompactGuidance(text, guidance);
         }
 
         var unresolved = hardUnresolved(plan);
@@ -109,7 +119,7 @@ public final class Presentation
         return toPlainText(detailedHtml(recommendation, goalContext));
     }
 
-    /** Four compact sections retain the useful decision without graph dumps. */
+    /** Compact decision sections, with complete typed preparation when setup is pending. */
     public static List<Section> detailsSections(Recommendation recommendation,
             GoalRecommendationContext goalContext)
     {
@@ -126,8 +136,34 @@ public final class Presentation
                     compactSentence(goalContext.status, 160)));
 
         var why = playerWhy(recommendation);
+        CandidateComparison comparison = recommendation.plan() == null
+                ? null : recommendation.plan().comparison;
+        if (comparison != null)
+            why = compactSentence(why, 82) + " " + compactSentence(comparison.reason, 110);
         if (hasText(why))
-            sections.add(new Section("WHY", compactSentence(why, 140)));
+            sections.add(new Section("WHY", compactSentence(why, 195)));
+
+        var plan = recommendation.plan();
+        MethodIntelligenceCatalog.Recipe nextUnlock = plan == null || plan.readiness == null
+                ? null : plan.readiness.nextUnlock;
+        if (nextUnlock != null && nextUnlock.level > recommendation.currentLevel)
+        {
+            sections.add(new Section("NEXT UNLOCK", plan.readiness.nextUnlockName() + " becomes available at "
+                    + nextUnlock.skill.getName() + " " + nextUnlock.level + ". Current level: "
+                    + recommendation.currentLevel + ". It is excluded until that requirement is met."));
+        }
+        if (plan != null && plan.readiness != null && plan.readiness.actionable()
+                && plan.readiness.preparation.nextAction() != null)
+        {
+            // Setup can contain several necessary actions. Keep every step in the
+            // fuller view instead of losing later items to prose/section truncation.
+            sections.add(new Section("SETUP", plan.readiness.preparation.explanation()));
+            if (guidance != null && hasText(guidance.location))
+                sections.add(new Section("WHERE", guidance.location));
+            sections.add(new Section("AFTER SETUP",
+                    plan.readiness.processingAction(recommendation.targetLevel)));
+            return unmodifiableList(sections);
+        }
 
         var needed = firstNeeded(recommendation);
         if (hasText(needed))

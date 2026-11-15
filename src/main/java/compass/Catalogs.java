@@ -414,8 +414,20 @@ class MethodExecutionProfileCatalog extends IndexedCatalog<MethodProfile>
     public MethodExecutionProfileCatalog()
     {
         super(RESOURCE, MethodProfile[].class, MethodProfile::getMethodId);
-        for (MethodProfile profile : values) if (profile.actionTerms == null)
-            throw new IllegalStateException(Text.get(1224) + RESOURCE);
+        ReviewedActionRecipeCatalog recipes = new ReviewedActionRecipeCatalog();
+        for (MethodProfile profile : values)
+        {
+            if (profile.actionTerms == null || profile.inputs == null
+                    || profile.reviewedRecipes != null && !profile.inputs.isEmpty())
+                throw new IllegalStateException(Text.get(1224) + RESOURCE);
+            if (profile.reviewedRecipes != null)
+            {
+                Set<String> seen = new HashSet<>();
+                for (String key : profile.reviewedRecipes)
+                    if (recipes.recipe(key) == null || !seen.add(key))
+                        throw new IllegalStateException("Invalid profile recipe reference: " + key);
+            }
+        }
     }
 
     public MethodProfile forMethod(String methodId) { return indexed(methodId); }
@@ -494,6 +506,13 @@ final class MethodStrategyKnowledgeCatalog
     public MethodStrategyProfile profileFor(TrainingMethod method,
             TrainingMethodMetadata metadata, AccountMode mode)
     {
+        return profileFor(method, metadata, mode, null);
+    }
+
+    public MethodStrategyProfile profileFor(TrainingMethod method,
+            TrainingMethodMetadata metadata, AccountMode mode,
+            BankingMode reviewedBanking)
+    {
         if (method == null || metadata == null || mode == null) return null;
         List<MethodStrategyProfile> specific = exact.get(
                 method.id);
@@ -505,10 +524,15 @@ final class MethodStrategyKnowledgeCatalog
                         && (selected == null || profile.tier.ordinal()
                                 < selected.tier.ordinal()))
                     selected = profile;
-            return selected;
+            if (selected == null || reviewedBanking == null
+                    || selected.bankingBehavior == reviewedBanking) return selected;
+            return new MethodStrategyProfile(selected.methodId, selected.tier,
+                    selected.accountModes, reviewedBanking, selected.inventoryFootprint,
+                    selected.accountValueFit, selected.playerReason, selected.sources);
         }
 
-        var bankLoop = CONVENTIONAL_BANK_LOOPS.contains(method.id);
+        var bankLoop = reviewedBanking == BankingMode.CONVENTIONAL_BANK_LOOP
+                || reviewedBanking == null && CONVENTIONAL_BANK_LOOPS.contains(method.id);
         if (mode == AccountMode.UNKNOWN && bankLoop) return null;
         if (mode == AccountMode.ULTIMATE_IRONMAN
                 && (bankLoop || !metadata.uimFriendly)) return null;
@@ -518,15 +542,18 @@ final class MethodStrategyKnowledgeCatalog
             modes.remove(AccountMode.ULTIMATE_IRONMAN);
         if (!modes.contains(mode)) return null;
 
-        var key = mode.name() + ':' + method.id;
+        var banking = reviewedBanking == null
+                ? bankLoop ? BankingMode.CONVENTIONAL_BANK_LOOP : BankingMode.NONE
+                : reviewedBanking;
+        var key = mode.name() + ':' + banking + ':' + method.id;
         return generated.computeIfAbsent(key, ignored -> genericProfile(
-                method, metadata, mode, bankLoop, modes,
+                method, metadata, mode, banking, modes,
                 executionProfiles.forMethod(method.id)));
     }
 
     private static MethodStrategyProfile genericProfile(TrainingMethod method,
             TrainingMethodMetadata metadata, AccountMode mode,
-            boolean bankLoop, Set<AccountMode> modes,
+            BankingMode banking, Set<AccountMode> modes,
             MethodProfile executionProfile)
     {
         Source source = accountSkillSource(
@@ -536,8 +563,7 @@ final class MethodStrategyKnowledgeCatalog
                 : Text.get(387);
         return new MethodStrategyProfile(method.id,
                 KnowledgeTier.VERIFIED_SHARED, modes,
-                bankLoop ? BankingMode.CONVENTIONAL_BANK_LOOP
-                        : BankingMode.NONE,
+                banking,
                 typedFootprint(method, metadata, executionProfile),
                 metadata.selfSourceFriendly && mode.isIronLike() ? 0.55 : 0.35,
                 reason, singletonList(source));
@@ -670,6 +696,7 @@ class PvmActivityCatalog
             new HashSet<>(Arrays.asList(
                     "pvm:brutus", "pvm:obor", "pvm:bryophyta", Text.get(1815),
                     "pvm:scurrius", "pvm:giant_mole", "pvm:sarachnis", "pvm:hespori",
+                    "pvm:lunar_chests",
                     "pvm:zulrah", "pvm:vorkath", Text.get(1816),
                     Text.get(1817), Text.get(1818),
                     Text.get(1819), Text.get(1820),
@@ -690,16 +717,13 @@ class PvmActivityCatalog
                 Text.get(1831), PvmActivity[].class))
             if (value.id == null || values.put(value.id, value) != null)
                 throw new IllegalStateException(Text.get(1199));
-        var bosses = 0;
+        Set<String> currentBosses = new HashSet<>();
         for (HiscoreSkill skill : HiscoreSkill.values())
             if (skill.getType() == HiscoreSkillType.BOSS)
-            {
-                bosses++;
-                var id = "pvm:" + skill.name().toLowerCase(Locale.ROOT);
-                if (!values.containsKey(id))
-                    throw new IllegalStateException(Text.get(1200) + id);
-            }
-        if (values.size() != bosses)
+                currentBosses.add("pvm:" + skill.name().toLowerCase(Locale.ROOT));
+        // New RuneLite identities stay unavailable until reviewed; a removed
+        // identity still fails so stale bundled guidance cannot silently ship.
+        if (!currentBosses.containsAll(values.keySet()))
             throw new IllegalStateException(Text.get(1201));
         byId = unmodifiableMap(values);
         activities = unmodifiableList(new ArrayList<>(values.values()));
@@ -745,6 +769,9 @@ class PvmEvidenceProfileCatalog
                 singletonList("Mossy key"), 5, 0));
         add(new PvmEvidenceProfile("pvm:scurrius", "melee",
                 emptyList(), 5, 1));
+        add(new PvmEvidenceProfile("pvm:lunar_chests", "melee",
+                emptyList(), 0, 0, moonsWeapons(), moonsArmour(),
+                moonsArmourOptions(), true));
     }
 
     public PvmEvidenceProfile forActivity(String id)
@@ -757,6 +784,40 @@ class PvmEvidenceProfileCatalog
     private void add(PvmEvidenceProfile profile)
     {
         profiles.put(profile.activityId, profile);
+    }
+
+    private static Map<String, List<String>> moonsWeapons()
+    {
+        Map<String, List<String>> result = new LinkedHashMap<>();
+        result.put("stab", Arrays.asList("spear", "hasta", "fang", "rapier", "sword"));
+        result.put("crush", Arrays.asList("mace", "maul", "bludgeon", "warhammer"));
+        result.put("slash", Arrays.asList("scimitar", "whip", "battleaxe",
+                "scythe", "halberd", "sword"));
+        return result;
+    }
+
+    private static Map<EquipmentInventorySlot, String> moonsArmour()
+    {
+        Map<EquipmentInventorySlot, String> result =
+                new EnumMap<>(EquipmentInventorySlot.class);
+        result.put(EquipmentInventorySlot.BODY, "defensive body armour");
+        result.put(EquipmentInventorySlot.LEGS, "defensive leg armour");
+        return result;
+    }
+
+    private static Map<EquipmentInventorySlot, List<String>>
+            moonsArmourOptions()
+    {
+        Map<EquipmentInventorySlot, List<String>> result =
+                new EnumMap<>(EquipmentInventorySlot.class);
+        result.put(EquipmentInventorySlot.BODY, Arrays.asList(
+                "platebody", "chainbody", "chestplate", "chestguard",
+                "torso", "hauberk", "brassard", "cuirass",
+                "granite body"));
+        result.put(EquipmentInventorySlot.LEGS, Arrays.asList(
+                "platelegs", "plateskirt", "tasset", "legguards",
+                "cuisse", "granite legs"));
+        return result;
     }
 }
 
@@ -771,12 +832,21 @@ class PvmPreparationProfileCatalog extends IndexedCatalog<PvmPreparationProfile>
     {
         super(RESOURCE, PvmPreparationProfile[].class,
                 PvmPreparationProfile::getActivityId);
-        for (PvmPreparationProfile profile : values) if (profile.getChecks() == null)
+        for (PvmPreparationProfile profile : values) if (profile.getChecks() == null
+                || invalidLevels(profile.readinessSkills)
+                || invalidLevels(profile.alternativeReadinessSkills))
             throw new IllegalStateException(Text.get(1164) + RESOURCE);
     }
 
     public PvmPreparationProfile forActivity(String id) { return indexed(id); }
     public Map<String, PvmPreparationProfile> all() { return index; }
+
+    private static boolean invalidLevels(Map<Skill, Integer> levels)
+    {
+        return levels != null && (levels.isEmpty() || levels.entrySet().stream()
+                .anyMatch(entry -> entry.getKey() == null
+                        || entry.getValue() == null || entry.getValue() <= 1));
+    }
 }
 
 /** Curated quest knowledge plus fail-closed authoritative enrichment. */
@@ -1007,7 +1077,7 @@ class RuneLiteSkillActionCatalog
             var enumValue = (Enum<?>) action;
             String id = "runelite:" + skill.name().toLowerCase(Locale.ROOT)
                     + ":" + enumValue.name().toLowerCase(Locale.ROOT);
-            String name = itemManager == null ? pretty(enumValue.name())
+            String name = itemManager == null ? pretty(skill, enumValue.name())
                     : action.getName(itemManager);
             Membership membership = itemManager == null
                     ? Membership.UNKNOWN
@@ -1047,9 +1117,13 @@ class RuneLiteSkillActionCatalog
         actionsBySkill.put(Skill.WOODCUTTING, WoodcuttingAction.values());
     }
 
-    private static String pretty(String value)
+    private static String pretty(Skill skill, String value)
     {
         var text = value.toLowerCase(Locale.ROOT).replace('_', ' ');
+        if (skill == HERBLORE
+                && (text.endsWith(" 3") || text.endsWith(" 4")))
+            text = text.substring(0, text.length() - 2)
+                    + "(" + text.charAt(text.length() - 1) + ")";
         return Character.toUpperCase(text.charAt(0)) + text.substring(1);
     }
 }
@@ -1205,7 +1279,7 @@ class SlayerMasterCatalog
                 && status == QuestStatus.IN_PROGRESS;
     }
 
-    private static int combatLevel(AccountSnapshot account)
+    static int combatLevel(AccountSnapshot account)
     {
         double base = .25 * (account.level(DEFENCE) + account.level(HITPOINTS)
                 + Math.floor(account.level(PRAYER) / 2.0));

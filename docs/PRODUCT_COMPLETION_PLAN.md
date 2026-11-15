@@ -68,3 +68,9 @@ teammate infrastructure, generic gear benefit, and exhaustive Slayer reward
 economics) remain internal or CHECK_NEEDED rather than being exposed as false
 automatic intelligence. The exact operational seams and limits are recorded in
 `PRODUCT_COMPLETION_ARCHITECTURE.md`.
+
+## Current broader mission
+
+The historical checkpoints above do not establish completion of the current
+whole-product mission. See [method intelligence coverage](METHOD_INTELLIGENCE_COVERAGE.md)
+for the measured 2026-09-30 contract/input coverage gap and proposed next migration.

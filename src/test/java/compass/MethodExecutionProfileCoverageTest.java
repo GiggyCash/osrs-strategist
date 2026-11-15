@@ -1,6 +1,10 @@
 package compass;
 
 import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import net.runelite.api.Skill;
 import org.junit.Test;
@@ -13,13 +17,32 @@ public class MethodExecutionProfileCoverageTest
     @Test
     public void everyExecutionProfileMapsToARealTrainingMethod()
     {
-        Set<String> methodIds = allMethodIds();
+        Set<String> methodIds = allMethodSkills().keySet();
         for (String profileId : new MethodExecutionProfileCatalog().all().keySet())
         {
             assertTrue(
                     "Execution profile points at missing training method: " + profileId,
                     methodIds.contains(profileId));
         }
+    }
+
+    @Test
+    public void everyExecutionProfileMatchesAPinnedRuneLiteAction()
+    {
+        Map<String, Skill> methodSkills = allMethodSkills();
+        RuneLiteSkillActionCatalog actions = new RuneLiteSkillActionCatalog();
+        List<String> missing = new ArrayList<>();
+        for (MethodProfile profile :
+                new MethodExecutionProfileCatalog().all().values())
+        {
+            Skill skill = methodSkills.get(profile.methodId);
+            boolean matched = skill != null && actions.actionsFor(skill).stream()
+                    .anyMatch(action -> AdaptiveActionSelector.matches(
+                            action, profile.actionTerms));
+            if (!matched) missing.add(profile.methodId);
+        }
+        assertTrue("Execution profiles match no RuneLite action: " + missing,
+                missing.isEmpty());
     }
 
     @Test
@@ -58,21 +81,21 @@ public class MethodExecutionProfileCoverageTest
         }
     }
 
-    private static Set<String> allMethodIds()
+    private static Map<String, Skill> allMethodSkills()
     {
-        Set<String> ids = new HashSet<>();
+        Map<String, Skill> skills = new LinkedHashMap<>();
         ExpandedTrainingMethodCatalog expanded = new ExpandedTrainingMethodCatalog();
         F2pBaselineMethodCatalog f2p = new F2pBaselineMethodCatalog();
         TrainingMethodDatabase legacy = new TrainingMethodDatabase();
         for (Skill skill : Skill.values())
         {
             for (CuratedTrainingMethod method : expanded.methodsFor(skill))
-                ids.add(method.getMethod().getId());
+                skills.put(method.getMethod().getId(), skill);
             for (CuratedTrainingMethod method : f2p.methodsFor(skill))
-                ids.add(method.getMethod().getId());
+                skills.put(method.getMethod().getId(), skill);
             for (TrainingMethod method : legacy.methodsFor(skill))
-                ids.add(method.getId());
+                skills.put(method.getId(), skill);
         }
-        return ids;
+        return skills;
     }
 }

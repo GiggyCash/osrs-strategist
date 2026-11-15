@@ -20,6 +20,34 @@ public class ResourceDependencyResolverTest
     {
         assertEquals(41, new ResourceDependencyCatalog().size());
     }
+
+    @Test
+    public void standardArrowDependenciesUsePlayerFacingArrowtipNames()
+    {
+        int[] arrows = {ItemID.BRONZE_ARROW, ItemID.IRON_ARROW,
+                ItemID.STEEL_ARROW, ItemID.MITHRIL_ARROW,
+                ItemID.ADAMANT_ARROW, ItemID.RUNE_ARROW};
+        int[] tips = {ItemID.BRONZE_ARROWHEADS, ItemID.IRON_ARROWHEADS,
+                ItemID.STEEL_ARROWHEADS, ItemID.MITHRIL_ARROWHEADS,
+                ItemID.ADAMANT_ARROWHEADS, ItemID.RUNE_ARROWHEADS};
+        String[] names = {"Bronze arrowtips", "Iron arrowtips",
+                "Steel arrowtips", "Mithril arrowtips",
+                "Adamant arrowtips", "Rune arrowtips"};
+        ResourceDependencyCatalog catalog = new ResourceDependencyCatalog();
+        for (int i = 0; i < arrows.length; i++)
+        {
+            int tipId = tips[i];
+            ResourceDependency dependency = catalog.forItem(arrows[i]);
+            assertTrue(dependency.getAction().contains("arrowtips"));
+            DependencyRequirement requirement = dependency.getPrerequisites()
+                    .stream().filter(value -> value.getResource() != null
+                            && value.getResource().itemId == tipId)
+                    .findFirst().orElseThrow(AssertionError::new);
+            assertEquals(names[i], requirement.getLabel());
+            assertEquals(names[i], requirement.getResource().itemName);
+        }
+    }
+
     @Test
     public void simpleAndMultiHopIronChainsResolveInPrerequisiteOrder()
     {

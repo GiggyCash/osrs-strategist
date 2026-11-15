@@ -30,13 +30,7 @@ public final class MethodProfile
     {
         NONE,
         ACTION_ITEM,
-        RAW_ACTION_ITEM,
-        LOG_FOR_BOW,
-        BAR_FOR_SMITHED_ITEM,
-        UNCUT_GEM,
         SAPLING_FOR_TREE,
-        DART_TIP_FOR_DART,
-        UNFINISHED_BOLT,
         FIXED
     }
 
@@ -46,6 +40,8 @@ public final class MethodProfile
     String unitPlural;
     double xpMultiplier;
     List<MethodInputRule> inputs;
+    // Null keeps legacy rules; an empty list deliberately leaves the method unresolved.
+    List<String> reviewedRecipes;
     String note;
     ProgressEstimateMode progressEstimateMode;
 
