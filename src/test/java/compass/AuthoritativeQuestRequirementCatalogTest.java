@@ -2184,6 +2184,9 @@ public class AuthoritativeQuestRequirementCatalogTest
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
                 .definitionFor("Elemental Workshop I");
+        assertFalse(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(3, quest.getSkillRequirements().size());
         assertEquals(Integer.valueOf(20),
                 quest.getSkillRequirements().get(Skill.MINING));
         assertEquals(Integer.valueOf(20),
@@ -2191,11 +2194,31 @@ public class AuthoritativeQuestRequirementCatalogTest
         assertEquals(Integer.valueOf(20),
                 quest.getSkillRequirements().get(Skill.CRAFTING));
         assertTrue(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Required items:")));
+                check -> check.contains("20 Mining, 20 Smithing, and 20 Crafting")
+                        && check.contains("boostable")
+                        && check.contains("not required to start")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("knife or slash weapon")
+                        && check.contains("dagger or scimitar")
+                        && check.contains("obtainable during the quest")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("pickaxe")
+                        && check.contains("thread")
+                        && check.contains("hammer")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("needle or obtain one during the quest")
+                        && check.contains("costume needle does not work")));
+        assertTrue(quest.getAccessChecks().contains(
+                "Bring leather or obtain it during the quest"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Bring 4 coal")
+                        && check.contains("4 more for each additional elemental bar")));
         assertTrue(quest.getAccessChecks().stream().anyMatch(
                 check -> check.contains("Earth elemental (level 35)")));
         assertFalse(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Access requirements:")));
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
     }
 
     @Test

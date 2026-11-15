@@ -4703,8 +4703,13 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Knife (obtainable during the quest) or a slash weapon (e.g. dagger or scimitar) Pickaxe Needle (obtainable during the quest, Costume needle does not work) Thread Leather (obtainable during the quest) Hammer 4 coal (4 more for each additional bar you would like to produce)",
-      "Combat encounters: Earth elemental (level 35)"
+      "20 Mining, 20 Smithing, and 20 Crafting are boostable and not required to start the quest",
+      "Bring a knife or slash weapon such as a dagger or scimitar; a knife is obtainable during the quest",
+      "Bring a pickaxe, thread, and hammer",
+      "Bring a needle or obtain one during the quest; a costume needle does not work",
+      "Bring leather or obtain it during the quest",
+      "Bring 4 coal, plus 4 more for each additional elemental bar you want to produce",
+      "Combat encounter: Earth elemental (level 35)"
     ],
     "startLocation": "Search the bookcase in the house immediately south-west of the Seers\u0027 Village bank.",
     "unlocks": [
