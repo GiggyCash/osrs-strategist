@@ -6151,7 +6151,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 20 balls of wool (unnoted) Shears if obtaining wool to spin into balls of wool (obtained during the quest)"
+      "Bring 20 unnoted balls of wool, or obtain shears during the quest to collect wool and spin it into balls of wool"
     ],
     "startLocation": "Talk to Fred the Farmer in the house by the sheep pen north of Lumbridge Castle.",
     "unlocks": [

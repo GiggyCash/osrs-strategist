@@ -1408,6 +1408,25 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void sheepShearerKeepsF2pWoolAlternativeActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Sheep Shearer");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Bring 20 unnoted balls of wool, or obtain shears "
+                                + "during the quest to collect wool and spin it "
+                                + "into balls of wool"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
     public void scorpionCatcherKeepsDungeonRoutesAndJailerConditional()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
