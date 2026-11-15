@@ -6123,7 +6123,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 100 coins"
+      "Bring 100 coins"
     ],
     "startLocation": "Talk to Councillor Halgrive outside of the East Ardougne church.",
     "unlocks": [

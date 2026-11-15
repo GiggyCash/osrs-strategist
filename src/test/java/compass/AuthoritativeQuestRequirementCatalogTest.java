@@ -2238,6 +2238,21 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void sheepHerderKeepsDeterministicCoinPreparationActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Sheep Herder");
+        assertFalse(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList("Bring 100 coins"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void eyesOfGlouphrieKeepsSapAndMudRuneAsItemPreparation()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
