@@ -2017,6 +2017,29 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void ribbitingTaleRestoresChildrenOfTheSunPrerequisite()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog().definitionFor(
+                "The Ribbiting Tale of a Lily Pad Labour Dispute");
+        assertEquals(java.util.Collections.singletonList(
+                        "Children of the Sun"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(15),
+                quest.getSkillRequirements().get(Skill.WOODCUTTING));
+        assertEquals(java.util.Arrays.asList(
+                        "15 Woodcutting is non-boostable and required to "
+                                + "start the quest",
+                        "Bring any axe; a bronze axe is obtainable during "
+                                + "the quest",
+                        "Combat encounters: Cuthbert, Lord of Dread (level "
+                                + "1)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

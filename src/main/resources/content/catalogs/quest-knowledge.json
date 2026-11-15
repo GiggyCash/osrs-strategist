@@ -5963,15 +5963,17 @@
   {
     "name": "The Ribbiting Tale of a Lily Pad Labour Dispute",
     "freeToPlay": false,
-    "prerequisites": [],
+    "prerequisites": [
+      "Children of the Sun"
+    ],
     "skillRequirements": {
       "WOODCUTTING": 15
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Any axe (a bronze axe is obtainable during the quest)",
-      "Access requirements: link\u003dWoodcutting|alt\u003dWoodcutting 15 Woodcutting [ not boostable ] [ required to start ] Completion of the following quests: Children of the Sun",
+      "15 Woodcutting is non-boostable and required to start the quest",
+      "Bring any axe; a bronze axe is obtainable during the quest",
       "Combat encounters: Cuthbert, Lord of Dread (level 1)"
     ],
     "startLocation": "Talk to Marcellus at the Locus Oasis.",
