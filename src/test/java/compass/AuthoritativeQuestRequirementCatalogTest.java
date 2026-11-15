@@ -1039,15 +1039,24 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
-    public void fishingContestDoesNotDuplicateItsTypedSkillRequirement()
+    public void fishingContestKeepsCoinAndRodAlternativesActionable()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
                 .definitionFor("Fishing Contest");
+        assertTrue(quest.getPrerequisites().isEmpty());
         assertEquals(Integer.valueOf(10),
                 quest.getSkillRequirements().get(Skill.FISHING));
-        assertEquals(1, quest.getAccessChecks().size());
-        assertTrue(quest.getAccessChecks().get(0).startsWith(
-                "Required items:"));
+        assertEquals(java.util.Arrays.asList(
+                        "Bring a spade and 5 coins, or 10 coins if buying a "
+                                + "fishing rod from Jack",
+                        "Bring a fishing rod or pearl fishing rod; an oily "
+                                + "fishing rod does not work",
+                        "Obtain garlic and a red vine worm during the quest"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Required items:")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Combat encounters:")));
     }
 
     @Test
