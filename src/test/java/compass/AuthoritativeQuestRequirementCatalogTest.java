@@ -1077,7 +1077,7 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
-    public void fenkenstrainUsesPartialRestlessGhostProgressWithoutPhantomSmithing()
+    public void fenkenstrainKeepsPartialQuestAndSupplyAlternatives()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
                 .definitionFor("Creature of Fenkenstrain");
@@ -1090,10 +1090,21 @@ public class AuthoritativeQuestRequirementCatalogTest
                 quest.getSkillRequirements().get(Skill.CRAFTING));
         assertEquals(Integer.valueOf(25),
                 quest.getSkillRequirements().get(Skill.THIEVING));
-        assertTrue(quest.getAccessChecks().contains(
-                "Verify a safe route past level 72 monsters"));
+        assertEquals(java.util.Arrays.asList(
+                        "20 Crafting and 25 Thieving are boostable and not "
+                                + "required to start the quest",
+                        "Bring a ghostspeak amulet, silver bar, 3 unnoted "
+                                + "bronze wire, a regular needle, 5 thread, "
+                                + "and a spade; a costume needle does not work",
+                        "Bring 50 coins, or 1 law rune and 1 air rune to cast "
+                                + "Telekinetic Grab with 33 Magic",
+                        "Verify a safe route past level 72 monsters",
+                        "Combat encounter: Experiment (level 51) can be "
+                                + "safespotted or flinched"),
+                quest.getAccessChecks());
         assertFalse(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Access requirements:")));
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
     }
 
     @Test
