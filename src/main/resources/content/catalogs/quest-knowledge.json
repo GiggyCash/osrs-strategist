@@ -6389,8 +6389,11 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: An iron bar Maple or yew logs Rope Climbing boots (not needed if using Trollheim Teleport) Wax (can be made ahead of time) A bucket of wax (use insect repellent on a beehive followed by a bucket) A cake tin Swamp tar",
-      "Combat encounters: Arrg (level 113) (safespottable; difficult to reach) Note: This fight is not a safe death."
+      "28 Agility is boostable; whether it is required to start the quest is unknown",
+      "Bring an iron bar, maple or yew logs, and a rope",
+      "Bring climbing boots unless using Trollheim Teleport",
+      "Bring wax, or make it ahead of time from a bucket of wax, cake tin, and swamp tar; obtain the bucket of wax by using insect repellent on a beehive, then using a bucket on it",
+      "Combat encounter: Arrg (level 113) is safespottable but difficult to reach; this fight is not a safe death"
     ],
     "startLocation": "Talk to Ug at the Troll Stronghold.",
     "unlocks": [

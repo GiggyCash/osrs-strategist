@@ -2274,17 +2274,38 @@ public class AuthoritativeQuestRequirementCatalogTest
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
                 .definitionFor("Troll Romance");
+        assertFalse(quest.isFreeToPlay());
+        assertEquals(java.util.Collections.singletonList("Troll Stronghold"),
+                quest.getPrerequisites());
         assertFalse(quest.getSkillRequirements().containsKey(
                 Skill.WOODCUTTING));
         assertEquals(1, quest.getSkillRequirements().size());
         assertEquals(Integer.valueOf(28),
                 quest.getSkillRequirements().get(Skill.AGILITY));
         assertTrue(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Required items:")));
+                check -> check.contains("28 Agility is boostable")
+                        && check.contains("required to start the quest is unknown")));
         assertTrue(quest.getAccessChecks().stream().anyMatch(
-                check -> check.contains("Arrg (level 113)")));
+                check -> check.contains("iron bar")
+                        && check.contains("maple or yew logs")
+                        && check.contains("rope")));
+        assertTrue(quest.getAccessChecks().contains(
+                "Bring climbing boots unless using Trollheim Teleport"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("bucket of wax")
+                        && check.contains("cake tin")
+                        && check.contains("swamp tar")
+                        && check.contains("insect repellent on a beehive")
+                        && check.contains("using a bucket on it")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Arrg (level 113)")
+                        && check.contains("safespottable")
+                        && check.contains("difficult to reach")
+                        && check.contains("not a safe death")));
         assertFalse(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Access requirements:")));
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
     }
 
     @Test
