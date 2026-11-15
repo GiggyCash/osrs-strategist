@@ -344,6 +344,38 @@ public class QuestPlanningEngineTest
     }
 
     @Test
+    public void bloodMoonAcceptsFlailOrCoinsAndChecksQuestPickaxeSource()
+    {
+        ItemRule preparation = new QuestKnowledgeCatalog()
+                .definitionFor("The Blood Moon Rises")
+                .getItemRequirementExpression();
+        GameData equipped = GameData.builder(
+                        account(Membership.P2P, 80, 80, 80))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Arrays.asList(
+                        item("Blisterwood flail"),
+                        item("Dragon pickaxe")), 1L))
+                .build();
+        assertEquals(RequirementState.VERIFIED,
+                new ItemRequirementEvaluator().evaluate(
+                        preparation, equipped, false).getState());
+
+        GameData questSource = GameData.builder(
+                        account(Membership.P2P, 80, 80, 80))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.singletonList(
+                        new ItemState(1, "Coins", 40000)), 1L))
+                .build();
+        ItemRequirementResult result = new ItemRequirementEvaluator()
+                .evaluate(preparation, questSource, false);
+        assertEquals(RequirementState.CHECK_NEEDED, result.getState());
+        assertTrue(result.getAction().contains(
+                "bronze pickaxe from Ivan Strom"));
+    }
+
+    @Test
     public void exactUimQuestSlotRequirementChangesReadiness()
     {
         QuestDefinition definition = new QuestDefinition("Slot test", false, Collections.emptyList(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), ItemRule.itemClass(

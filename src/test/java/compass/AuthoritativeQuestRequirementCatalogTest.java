@@ -31,13 +31,40 @@ public class AuthoritativeQuestRequirementCatalogTest
                 .definitionFor("The Blood Moon Rises");
         assertEquals(Integer.valueOf(74),
                 bloodMoon.getSkillRequirements().get(Skill.SLAYER));
+        assertEquals(10, bloodMoon.getSkillRequirements().size());
+        assertEquals(10, bloodMoon.getPrerequisites().size());
         assertTrue(bloodMoon.getPrerequisites().contains("Sins of the Father"));
         assertFalse(bloodMoon.hasFieldUncertainty());
         assertFalse(bloodMoon.getStartLocation().isEmpty());
+        ItemRule preparation = bloodMoon.getItemRequirementExpression();
+        assertEquals(ItemRule.Kind.ALL_OF, preparation.getKind());
+        assertEquals(2, preparation.getChildren().size());
+        assertEquals(ItemRule.Kind.ANY_OF,
+                preparation.getChildren().get(0).getKind());
+        assertEquals("Blisterwood flail", preparation.getChildren().get(0)
+                .getChildren().get(0).getItemNames().get(0));
+        assertEquals(40000, preparation.getChildren().get(0)
+                .getChildren().get(1).getQuantity());
+        assertEquals(ItemRequirementClass.PICKAXE,
+                preparation.getChildren().get(1).getChildren().get(0)
+                        .getItemClass());
+        assertTrue(preparation.getChildren().get(1).getChildren().get(1)
+                .getCheckAction().contains("Ivan Strom"));
+        assertEquals(3, bloodMoon.getAccessChecks().size());
         assertTrue(bloodMoon.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Required items:")));
+                check -> check.contains("vyre noble clothing free")
+                        && check.contains("Old Man Ral's house")));
+        assertTrue(bloodMoon.getAccessChecks().stream().anyMatch(
+                check -> check.contains("tinderbox, hammer, knife, chisel")
+                        && check.contains("blisterwood logs")));
+        assertTrue(bloodMoon.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Wyrd (level 564)")
+                        && check.contains("Lowerniel Drakan (level 1063)")
+                        && check.contains("across four fights")));
         assertFalse(bloodMoon.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Access requirements:")));
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
     }
 
     @Test
