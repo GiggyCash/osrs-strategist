@@ -4460,8 +4460,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Spade (obtainable during quest) Tinderbox (obtainable during quest)",
-      "Combat encounters: Ithoi the Navigator (level 35)"
+      "Bring a spade and tinderbox, or obtain both during the quest",
+      "Combat encounter: Ithoi the Navigator (level 35)"
     ],
     "startLocation": "Talk to Captain Tock at the crossroads north of Port Sarim.",
     "unlocks": [

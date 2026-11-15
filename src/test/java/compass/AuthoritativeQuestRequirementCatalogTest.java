@@ -1447,6 +1447,24 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void corsairCurseKeepsF2pObtainableToolsAndCombatActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Corsair Curse");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Arrays.asList(
+                        "Bring a spade and tinderbox, or obtain both during the quest",
+                        "Combat encounter: Ithoi the Navigator (level 35)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
     public void scorpionCatcherKeepsDungeonRoutesAndJailerConditional()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
