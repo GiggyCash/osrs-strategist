@@ -1920,6 +1920,39 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void shadowsOfCustodiaKeepsStartGatesAndItemSources()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Shadows of Custodia");
+        assertEquals(java.util.Collections.singletonList(
+                        "Children of the Sun"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(54),
+                quest.getSkillRequirements().get(Skill.SLAYER));
+        assertEquals(Integer.valueOf(45),
+                quest.getSkillRequirements().get(Skill.FISHING));
+        assertEquals(Integer.valueOf(41),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertEquals(Integer.valueOf(36),
+                quest.getSkillRequirements().get(Skill.HUNTER));
+        assertEquals(java.util.Arrays.asList(
+                        "54 Slayer, 45 Fishing, 41 Construction, and 36 "
+                                + "Hunter are non-boostable and required to "
+                                + "start the quest",
+                        "Bring 4 willow longbows; buy them from Arcuani's "
+                                + "Archery Supplies in Tal Teklan or Lowe's "
+                                + "Archery Emporium in Varrock",
+                        "Obtain 4 maple logs, a hammer, and a fishing rod "
+                                + "during the quest; an oily, pearl, or "
+                                + "barbarian rod also works",
+                        "Combat encounters: 3 Strange creatures (level 93)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

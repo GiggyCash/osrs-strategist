@@ -4152,8 +4152,9 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 4 willow longbows Can be purchased from Arcuani\u0027s Archery Supplies in Tal Teklan or Lowe\u0027s Archery Emporium in Varrock 4 maple logs (obtainable during quest) Fishing rod (obtainable during quest) (Oily fishing rod, Pearl fishing rod, or Barbarian rod also works) Hammer (obtainable during quest)",
-      "Access requirements: Completion of the following quests: Children of the Sun link\u003dSlayer|alt\u003dSlayer 54 Slayer [ not boostable ] [ required to start ] link\u003dFishing|alt\u003dFishing 45 Fishing [ not boostable ] [ required to start ] link\u003dConstruction|alt\u003dConstruction 41 Construction [ not boostable ] [ required to start ] link\u003dHunter|alt\u003dHunter 36 Hunter [ not boostable ] [ required to start ]",
+      "54 Slayer, 45 Fishing, 41 Construction, and 36 Hunter are non-boostable and required to start the quest",
+      "Bring 4 willow longbows; buy them from Arcuani\u0027s Archery Supplies in Tal Teklan or Lowe\u0027s Archery Emporium in Varrock",
+      "Obtain 4 maple logs, a hammer, and a fishing rod during the quest; an oily, pearl, or barbarian rod also works",
       "Combat encounters: 3 Strange creatures (level 93)"
     ],
     "startLocation": "Read the notice board in Auburn Pub.",
