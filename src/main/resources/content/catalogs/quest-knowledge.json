@@ -4250,9 +4250,11 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: A raft or skiff (a sloop does NOT work) (You MUST use your own boat - you will not be able to disembark in Wyrmscraig Cavern unless you are the only player on the boat) A pickaxe (obtainable during the quest) A chisel (obtainable during the quest) Combat equipment and supplies to defeat the Mad Angel, weak to Crush",
-      "Access requirements: link\u003dSailing|alt\u003dSailing 62 Sailing [ not boostable ] Category:Unknown start requirement status link\u003dCrafting|alt\u003dCrafting 60 Crafting [ not boostable ] Category:Unknown start requirement status link\u003dRunecraft|alt\u003dRunecraft 47 Runecraft [ not boostable ] Category:Unknown start requirement status link\u003dMining|alt\u003dMining 53 Mining [ not boostable ] Category:Unknown start requirement status Completion of the following quests: Pandemonium",
-      "Combat encounters: 3 mountain trolls (level 69) Mad Angel (level 270)"
+      "62 Sailing, 60 Crafting, 53 Mining, and 47 Runecraft are non-boostable; whether any are required to start the quest is unknown",
+      "Use your own raft or skiff and travel alone to disembark in Wyrmscraig Cavern; a sloop does not work",
+      "Obtain a pickaxe and chisel during the quest",
+      "Bring combat equipment and supplies for the Mad Angel, which is weak to Crush",
+      "Combat encounters: 3 mountain trolls (level 69) and Mad Angel (level 270)"
     ],
     "startLocation": "Talk to Cormac, the mayor of Auchrie, on the island of Wyrmscraig.",
     "unlocks": [

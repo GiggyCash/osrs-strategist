@@ -1953,6 +1953,39 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void fallenFromGraceKeepsSoloBoatAndUnknownStartGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Fallen From Grace");
+        assertEquals(java.util.Collections.singletonList("Pandemonium"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(62),
+                quest.getSkillRequirements().get(Skill.SAILING));
+        assertEquals(Integer.valueOf(60),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(53),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertEquals(Integer.valueOf(47),
+                quest.getSkillRequirements().get(Skill.RUNECRAFT));
+        assertEquals(java.util.Arrays.asList(
+                        "62 Sailing, 60 Crafting, 53 Mining, and 47 "
+                                + "Runecraft are non-boostable; whether any "
+                                + "are required to start the quest is unknown",
+                        "Use your own raft or skiff and travel alone to "
+                                + "disembark in Wyrmscraig Cavern; a sloop "
+                                + "does not work",
+                        "Obtain a pickaxe and chisel during the quest",
+                        "Bring combat equipment and supplies for the Mad "
+                                + "Angel, which is weak to Crush",
+                        "Combat encounters: 3 mountain trolls (level 69) "
+                                + "and Mad Angel (level 270)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
