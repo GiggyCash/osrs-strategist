@@ -5484,8 +5484,10 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Tree Gnome Village Dungeon key (unless Roving Elves has been started) (obtainable during the quest) Combat equipment and some food Mith Grapple Any crossbow",
-      "Combat encounters: 3 Warped Terrorbirds (level 138) Evil Creature (level 1)"
+      "Meet 60 Strength, 56 Slayer, 56 Thieving, 47 Ranged, and 45 Agility; all five are non-boostable and required to start the quest",
+      "Bring the Tree Gnome Village Dungeon key unless you have started Roving Elves; the key is obtainable during the quest",
+      "Bring a mith grapple, any crossbow, combat equipment, and food",
+      "Combat encounters: 3 Warped Terrorbirds (level 138) and an Evil Creature (level 1)"
     ],
     "startLocation": "Speak to King Bolren in the Tree Gnome Village.",
     "unlocks": [

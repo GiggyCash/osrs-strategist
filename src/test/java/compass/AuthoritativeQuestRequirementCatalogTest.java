@@ -131,9 +131,23 @@ public class AuthoritativeQuestRequirementCatalogTest
         assertEquals(Integer.valueOf(45),
                 quest.getSkillRequirements().get(Skill.AGILITY));
         assertTrue(quest.getAccessChecks().stream().anyMatch(
-                check -> check.contains("Warped Terrorbirds (level 138)")));
+                check -> check.contains("all five are non-boostable")
+                        && check.contains("required to start")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Tree Gnome Village Dungeon key")
+                        && check.contains("unless you have started Roving Elves")
+                        && check.contains("obtainable during the quest")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("mith grapple")
+                        && check.contains("any crossbow")
+                        && check.contains("combat equipment")
+                        && check.contains("food")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("3 Warped Terrorbirds (level 138)")
+                        && check.contains("Evil Creature (level 1)")));
         assertFalse(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Access requirements:")));
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
     }
 
     @Test
