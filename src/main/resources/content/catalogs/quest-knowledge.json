@@ -5436,11 +5436,23 @@
     "freeToPlay": false,
     "prerequisites": [],
     "skillRequirements": {},
-    "itemRequirements": [],
+    "itemRequirements": [
+      {
+        "name": "Plank",
+        "quantity": 3
+      },
+      {
+        "name": "Bronze bar",
+        "quantity": 1
+      },
+      {
+        "name": "Molten glass",
+        "quantity": 1
+      }
+    ],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 3 normal planks Bronze bar Molten glass",
-      "Combat encounters: Goblin guard (level 42) (Optional – can simply be trapped behind a column)"
+      "Avoid the optional level 42 Goblin guard fight by trapping it behind a column, or bring a legal combat setup"
     ],
     "startLocation": "Talk to the Observatory professor in the Observatory Reception Room north of Castle Wars.",
     "unlocks": [

@@ -1483,6 +1483,32 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void observatoryQuestTypesItemsAndKeepsOptionalCombatActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Observatory Quest");
+        assertFalse(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(3, quest.getItemRequirements().size());
+        assertEquals("Plank", quest.getItemRequirements().get(0).getName());
+        assertEquals(3, quest.getItemRequirements().get(0).getQuantity());
+        assertEquals("Bronze bar", quest.getItemRequirements().get(1).getName());
+        assertEquals(1, quest.getItemRequirements().get(1).getQuantity());
+        assertEquals("Molten glass", quest.getItemRequirements().get(2).getName());
+        assertEquals(1, quest.getItemRequirements().get(2).getQuantity());
+        assertEquals(java.util.Collections.singletonList(
+                        "Avoid the optional level 42 Goblin guard fight by "
+                                + "trapping it behind a column, or bring a legal "
+                                + "combat setup"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
     public void scorpionCatcherKeepsDungeonRoutesAndJailerConditional()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
