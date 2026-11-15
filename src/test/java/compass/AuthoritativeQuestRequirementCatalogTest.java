@@ -1151,19 +1151,33 @@ public class AuthoritativeQuestRequirementCatalogTest
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
                 .definitionFor("Curse of the Empty Lord");
+        assertFalse(quest.isFreeToPlay());
         assertTrue(quest.getPrerequisites().isEmpty());
-        assertTrue(quest.getStartedPrerequisites().containsAll(
-                java.util.Arrays.asList(
-                        "Desert Treasure I", "The Restless Ghost")));
+        assertEquals(java.util.Arrays.asList(
+                        "Desert Treasure I", "The Restless Ghost"),
+                quest.getStartedPrerequisites());
         assertTrue(quest.getSkillRequirements().isEmpty());
-        assertTrue(quest.getAccessChecks().contains(
-                "If the ring of visibility is not already owned, obtain it "
-                        + "with 53 Thieving"));
-        assertTrue(quest.getAccessChecks().contains(
-                "Verify 31 Prayer only if Edgeville Monastery second-floor "
-                        + "access is needed"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Bring a ring of visibility")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("ghostspeak amulet")
+                        && check.contains("Morytania legs 2 or higher")
+                        && check.contains("except when otherwise noted")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("knife or slash weapon")
+                        && check.contains("only some routes need one")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("53 Thieving")
+                        && check.contains("non-boostable")
+                        && check.contains("ring of visibility is not already owned")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("31 Prayer is non-boostable")
+                        && check.contains("not required to start")
+                        && check.contains("only some players need it")
+                        && check.contains("Edgeville Monastery second floor")));
         assertFalse(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Access requirements:")));
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
     }
 
     @Test

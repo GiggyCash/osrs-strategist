@@ -6582,9 +6582,11 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Ring of visibility Ghostspeak amulet (Morytania legs 2 or higher may be used instead, except when otherwise noted) Some players may need a knife or slash weapon",
-      "If the ring of visibility is not already owned, obtain it with 53 Thieving",
-      "Verify 31 Prayer only if Edgeville Monastery second-floor access is needed"
+      "Bring a ring of visibility",
+      "Bring a ghostspeak amulet; Morytania legs 2 or higher may substitute except when otherwise noted",
+      "Have a knife or slash weapon available; only some routes need one",
+      "If the ring of visibility is not already owned, obtain it with 53 Thieving; this level is non-boostable",
+      "31 Prayer is non-boostable but not required to start; only some players need it to access the Edgeville Monastery second floor"
     ],
     "startLocation": "Talk to the mysterious ghost (Valdez) near Glarial\u0027s Tomb.",
     "unlocks": [
