@@ -5357,7 +5357,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Bucket (obtainable during quest) Tinderbox (obtainable during quest) Knife (obtainable during quest)"
+      "Bring a bucket, tinderbox, and knife, or obtain all three during the quest"
     ],
     "startLocation": "Talk to Abigale or Hewey in the south-eastern corner of Lumbridge Swamp, near the fishing spots.",
     "unlocks": [
