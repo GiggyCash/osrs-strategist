@@ -4798,9 +4798,11 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Bucket of sap (If you do not have one, you can use a knife on any tree that looks pointy (evergreen shaped trees) with a bucket in your inventory) Mud rune Maple logs Oak logs Hammer Saw Pestle and mortar",
-      "46 Magic is required during the quest but not to start it",
-      "Combat encounters: 6 x Evil creature that each have 1 HP"
+      "5 Construction is non-boostable; whether it is required to start the quest is unknown",
+      "46 Magic is non-boostable and required during the quest but not to start it",
+      "Bring a bucket of sap, or make one by using a knife on a pointy evergreen-shaped tree with a bucket in your inventory",
+      "Bring a mud rune, maple logs, oak logs, hammer, saw, and pestle and mortar",
+      "Combat encounters: 6 Evil creatures with 1 HP each"
     ],
     "startLocation": "Talk to Brimstail in his cave south-west side of the Tree Gnome Stronghold, directly west of the bank near the Stronghold Slayer Cave.",
     "unlocks": [

@@ -2178,7 +2178,7 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
-    public void eyesOfGlouphrieTreatsMudRuneAsAnItemNotASkillGate()
+    public void eyesOfGlouphrieKeepsSapAndMudRuneAsItemPreparation()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
                 .definitionFor("The Eyes of Glouphrie");
@@ -2189,13 +2189,21 @@ public class AuthoritativeQuestRequirementCatalogTest
                 quest.getSkillRequirements().get(Skill.MAGIC));
         assertEquals(Integer.valueOf(5),
                 quest.getSkillRequirements().get(Skill.CONSTRUCTION));
-        assertTrue(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Required items:")
-                        && check.contains("Mud rune")));
-        assertTrue(quest.getAccessChecks().contains(
-                "46 Magic is required during the quest but not to start it"));
+        assertEquals(java.util.Arrays.asList(
+                        "5 Construction is non-boostable; whether it is "
+                                + "required to start the quest is unknown",
+                        "46 Magic is non-boostable and required during the "
+                                + "quest but not to start it",
+                        "Bring a bucket of sap, or make one by using a knife "
+                                + "on a pointy evergreen-shaped tree with a "
+                                + "bucket in your inventory",
+                        "Bring a mud rune, maple logs, oak logs, hammer, saw, "
+                                + "and pestle and mortar",
+                        "Combat encounters: 6 Evil creatures with 1 HP each"),
+                quest.getAccessChecks());
         assertFalse(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Access requirements:")));
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
     }
 
     @Test
