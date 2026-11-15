@@ -5193,8 +5193,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Black bead Yellow bead Red bead White bead",
-      "Combat encounters: Multiple imps (level 2) (optional unless ironman)"
+      "Bring a black bead, yellow bead, red bead, and white bead",
+      "For self-sourcing Iron accounts, obtain any missing beads from multiple level-2 imps; this combat is optional for other accounts"
     ],
     "startLocation": "Talk to Wizard Mizgog on the top floor of the Wizards\u0027 Tower.",
     "unlocks": [

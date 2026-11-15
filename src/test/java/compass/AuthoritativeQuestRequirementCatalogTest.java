@@ -1388,6 +1388,26 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void impCatcherKeepsF2pBeadsAndIronSourcingExplicit()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Imp Catcher");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Arrays.asList(
+                        "Bring a black bead, yellow bead, red bead, and white bead",
+                        "For self-sourcing Iron accounts, obtain any missing "
+                                + "beads from multiple level-2 imps; this combat "
+                                + "is optional for other accounts"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
     public void scorpionCatcherKeepsDungeonRoutesAndJailerConditional()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
