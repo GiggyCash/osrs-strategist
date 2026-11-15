@@ -2189,17 +2189,47 @@ public class AuthoritativeQuestRequirementCatalogTest
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
                 .definitionFor("Cold War");
+        assertFalse(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
         assertFalse(quest.getSkillRequirements().containsKey(
                 Skill.WOODCUTTING));
         assertEquals(5, quest.getSkillRequirements().size());
         assertEquals(Integer.valueOf(34),
                 quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(15),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertEquals(Integer.valueOf(10),
+                quest.getSkillRequirements().get(Skill.HUNTER));
         assertTrue(quest.getAccessChecks().contains(
-                "Verify access to a crafting table 3"));
+                "Have access to a crafting table 3"));
         assertTrue(quest.getAccessChecks().stream().anyMatch(
-                check -> check.contains("Icelords (level 51)")));
+                check -> check.contains("all five are non-boostable")
+                        && check.contains("required to start")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("10 oak planks")
+                        && check.contains("10 steel nails")
+                        && check.contains("mahogany plank")
+                        && check.contains("leather")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("clockwork")
+                        && check.contains("steel bar")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("raw cod")
+                        && check.contains("Ring of Charos(a)")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("5 regular chicken feathers")
+                        && check.contains("other feathers do not work")));
+        assertTrue(quest.getAccessChecks().contains(
+                "Cowbells are obtained only during the quest"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("1–3 Icelords (level 51)")));
         assertFalse(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Access requirements:")));
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
     }
 
     @Test
