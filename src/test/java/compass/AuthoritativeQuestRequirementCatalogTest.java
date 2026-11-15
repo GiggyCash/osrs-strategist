@@ -1509,6 +1509,31 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void bearYourSoulTypesSpadeAndAlternativeAccessRoutes()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Bear Your Soul");
+        assertFalse(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(1, quest.getItemRequirements().size());
+        assertEquals("Spade", quest.getItemRequirements().get(0).getName());
+        assertEquals(1, quest.getItemRequirements().get(0).getQuantity());
+        ItemRule routes = quest.getItemRequirementExpression();
+        assertEquals(ItemRule.Kind.ANY_OF, routes.getKind());
+        assertEquals(3, routes.getChildren().size());
+        assertEquals("Dusty key",
+                routes.getChildren().get(0).getItemNames().get(0));
+        assertEquals("Key master teleport",
+                routes.getChildren().get(1).getItemNames().get(0));
+        assertEquals(ItemRule.Kind.CHECK_NEEDED,
+                routes.getChildren().get(2).getKind());
+        assertTrue(routes.getChildren().get(2).getCheckAction()
+                .contains("boostable 70/80 Agility route"));
+        assertTrue(quest.getAccessChecks().isEmpty());
+    }
+
+    @Test
     public void scorpionCatcherKeepsDungeonRoutesAndJailerConditional()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

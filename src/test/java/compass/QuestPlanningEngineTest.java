@@ -254,6 +254,35 @@ public class QuestPlanningEngineTest
     }
 
     @Test
+    public void bearYourSoulAcceptsObservedRouteItemsAndChecksAgilityAlternative()
+    {
+        QuestDefinition definition = new QuestKnowledgeCatalog()
+                .definitionFor("Bear Your Soul");
+        QuestRequirementResolver resolver = TestFixtures.questRequirementResolver();
+        GameData keyed = GameData.builder(account(Membership.P2P, 70, 70, 70))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Arrays.asList(
+                        item("Spade"), item("Dusty key")), 1L))
+                .build();
+        QuestResolution ready = resolver.resolve(definition, context(keyed));
+        assertEquals(Confidence.VERIFIED, ready.getConfidence());
+
+        GameData agilityRoute = GameData.builder(
+                        account(Membership.P2P, 70, 70, 70))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.singletonList(
+                        item("Spade")), 1L))
+                .build();
+        QuestResolution check = resolver.resolve(definition,
+                context(agilityRoute));
+        assertEquals(Confidence.CHECK_NEEDED, check.getConfidence());
+        assertTrue(check.getGuidance().getAction()
+                .contains("boostable 70/80 Agility route"));
+    }
+
+    @Test
     public void exactUimQuestSlotRequirementChangesReadiness()
     {
         QuestDefinition definition = new QuestDefinition("Slot test", false, Collections.emptyList(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), ItemRule.itemClass(

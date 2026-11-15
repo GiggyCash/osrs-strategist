@@ -6580,11 +6580,59 @@
     "freeToPlay": false,
     "prerequisites": [],
     "skillRequirements": {},
-    "itemRequirements": [],
-    "questPointsRequired": 0,
-    "accessChecks": [
-      "Required items: Spade Dusty key or link\u003dAgility|alt\u003dAgility 70/80 Agility [ boostable ] or Key master teleport"
+    "itemRequirements": [
+      {
+        "name": "Spade",
+        "quantity": 1
+      }
     ],
+    "itemRequirementExpression": {
+      "kind": "ANY_OF",
+      "itemNames": [],
+      "quantity": 1,
+      "quantityMode": "EXACT",
+      "scope": "IMMEDIATELY_USABLE",
+      "excludedItemNames": [],
+      "checkAction": "",
+      "children": [
+        {
+          "kind": "ITEM",
+          "itemNames": [
+            "Dusty key"
+          ],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "OWNED_OR_RETRIEVABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        },
+        {
+          "kind": "ITEM",
+          "itemNames": [
+            "Key master teleport"
+          ],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "OWNED_OR_RETRIEVABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        },
+        {
+          "kind": "CHECK_NEEDED",
+          "itemNames": [],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "Confirm the boostable 70/80 Agility route is usable",
+          "children": []
+        }
+      ]
+    },
+    "questPointsRequired": 0,
+    "accessChecks": [],
     "startLocation": "Speak to Aretha after reading a book called Soul Journey in the Arceuus Library.",
     "unlocks": [
       "Quest rewards: Soul bearer"
