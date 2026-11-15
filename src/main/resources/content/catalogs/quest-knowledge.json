@@ -5594,8 +5594,9 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 8 coins for 8 pots of vinegar (bring 68 coins if walking to and from Karamja for boat fare) 8 pots 8 logs of any type (or an axe to obtain them) Tinderbox",
-      "Combat encounters: Several (8): see below."
+      "Bring 8 coins to buy 8 pots of vinegar; bring 68 coins total if walking to and from Karamja by boat",
+      "Bring 8 pots, 8 logs of any type or an axe to obtain them, and a tinderbox",
+      "Prepare to defeat 8 quest creatures; the pinned summary does not identify them"
     ],
     "startLocation": "Talk to the Odd Old Man in Silvarea north-east of Varrock, by the Limestone Mine.",
     "unlocks": [

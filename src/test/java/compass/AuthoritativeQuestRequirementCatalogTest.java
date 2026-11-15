@@ -1197,6 +1197,29 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void ragAndBoneOneKeepsTravelCostAndCombatScopeExplicit()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Rag and Bone Man I");
+        assertFalse(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Arrays.asList(
+                        "Bring 8 coins to buy 8 pots of vinegar; bring 68 "
+                                + "coins total if walking to and from Karamja by boat",
+                        "Bring 8 pots, 8 logs of any type or an axe to obtain "
+                                + "them, and a tinderbox",
+                        "Prepare to defeat 8 quest creatures; the pinned "
+                                + "summary does not identify them"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("see below")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
     public void ragAndBoneTwoDoesNotHardGatePartialQuestOrOptionalDefence()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
