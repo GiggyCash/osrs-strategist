@@ -4617,7 +4617,6 @@
     "freeToPlay": false,
     "prerequisites": [
       "Doric\u0027s Quest",
-      "Enter the Abyss",
       "Troll Stronghold",
       "Wanted!"
     ],
@@ -4629,8 +4628,11 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: A mithril 2h sword A bow string A non-degraded large or colossal pouch :(You will lose all 3 items!) unless a colossal pouch is used.",
-      "Combat encounters: Abyssal creatures level 41+ (if not using Guardians of the Rift to obtain a large pouch)"
+      "65 Smithing is boostable and not required to start the quest",
+      "50 Runecraft is non-boostable; whether it is required to start the quest is unknown",
+      "50 Fletching is boostable; whether it is required to start the quest is unknown",
+      "Bring a mithril 2h sword, bow string, and a non-degraded large or colossal pouch; a large-pouch setup loses all three items, while a colossal pouch is retained",
+      "If obtaining a large pouch from Abyssal creatures instead of Guardians of the Rift, prepare for creatures of level 41 or higher"
     ],
     "startLocation": "Talk to the monk outside the Paterdomus Temple, at the northern end of the River Salve.",
     "unlocks": [

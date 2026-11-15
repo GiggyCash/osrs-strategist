@@ -977,18 +977,43 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
-    public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
+    public void deviousMindsKeepsDirectGatesAndActionableSetup()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
                 .definitionFor("Devious Minds");
-        assertEquals(4, quest.getPrerequisites().size());
+        assertEquals(3, quest.getPrerequisites().size());
+        assertTrue(quest.getPrerequisites().containsAll(java.util.Arrays.asList(
+                "Doric's Quest", "Troll Stronghold", "Wanted!")));
+        assertFalse(quest.getPrerequisites().contains("Enter the Abyss"));
         assertEquals(3, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(65),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(Integer.valueOf(50),
+                quest.getSkillRequirements().get(Skill.RUNECRAFT));
+        assertEquals(Integer.valueOf(50),
+                quest.getSkillRequirements().get(Skill.FLETCHING));
         assertTrue(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Required items:")));
+                check -> check.contains("65 Smithing is boostable")
+                        && check.contains("not required to start")));
         assertTrue(quest.getAccessChecks().stream().anyMatch(
-                check -> check.contains("Abyssal creatures level 41+")));
+                check -> check.contains("50 Runecraft is non-boostable")
+                        && check.contains("required to start the quest is unknown")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("50 Fletching is boostable")
+                        && check.contains("required to start the quest is unknown")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("mithril 2h sword")
+                        && check.contains("bow string")
+                        && check.contains("large or colossal pouch")
+                        && check.contains("large-pouch setup loses all three items")
+                        && check.contains("colossal pouch is retained")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Abyssal creatures")
+                        && check.contains("Guardians of the Rift")
+                        && check.contains("level 41 or higher")));
         assertFalse(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Access requirements:")));
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
     }
 
     @Test
