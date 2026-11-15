@@ -4096,7 +4096,9 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Any axe (a bronze axe can be found during the quest, but bringing a better one is recommended for cutting 10 logs) Hammer (obtainable during the quest) or Imcando hammer Saw (obtainable during the quest) or Amy\u0027s saw",
+      "Bring any axe; a bronze axe is obtainable during the quest, but a better axe is recommended for cutting 10 logs",
+      "Obtain a hammer during the quest or bring an Imcando hammer",
+      "Obtain a saw during the quest or bring Amy\u0027s saw",
       "Combat encounters: Gryphon (level 95) Shellbane gryphon (level 235)"
     ],
     "startLocation": "Talk to the injured tortugan on a Remote Island in the Unquiet Ocean.",

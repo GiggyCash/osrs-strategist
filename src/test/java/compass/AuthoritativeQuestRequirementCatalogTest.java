@@ -993,19 +993,38 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
-    public void troubledTortugansDoesNotDuplicateTypedAccessRequirements()
+    public void troubledTortugansKeepsTypedGatesAndToolAlternatives()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
                 .definitionFor("Troubled Tortugans");
         assertEquals(java.util.Collections.singletonList("Pandemonium"),
                 quest.getPrerequisites());
         assertEquals(6, quest.getSkillRequirements().size());
-        assertTrue(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Required items:")));
-        assertTrue(quest.getAccessChecks().stream().anyMatch(
-                check -> check.contains("Shellbane gryphon (level 235)")));
+        assertEquals(Integer.valueOf(51),
+                quest.getSkillRequirements().get(Skill.SLAYER));
+        assertEquals(Integer.valueOf(48),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertEquals(Integer.valueOf(45),
+                quest.getSkillRequirements().get(Skill.SAILING));
+        assertEquals(Integer.valueOf(45),
+                quest.getSkillRequirements().get(Skill.HUNTER));
+        assertEquals(Integer.valueOf(40),
+                quest.getSkillRequirements().get(Skill.WOODCUTTING));
+        assertEquals(Integer.valueOf(34),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(java.util.Arrays.asList(
+                        "Bring any axe; a bronze axe is obtainable during "
+                                + "the quest, but a better axe is recommended "
+                                + "for cutting 10 logs",
+                        "Obtain a hammer during the quest or bring an "
+                                + "Imcando hammer",
+                        "Obtain a saw during the quest or bring Amy's saw",
+                        "Combat encounters: Gryphon (level 95) Shellbane "
+                                + "gryphon (level 235)"),
+                quest.getAccessChecks());
         assertFalse(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Access requirements:")));
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
     }
 
     @Test
