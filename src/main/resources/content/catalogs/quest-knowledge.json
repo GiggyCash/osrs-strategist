@@ -4653,7 +4653,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 6 clay (not soft clay) 4 copper ores 2 iron ores"
+      "Bring 6 clay (not soft clay), 4 copper ores, and 2 iron ores"
     ],
     "startLocation": "Talk to Doric in the small house north of Falador, just outside the east gate of Taverley.",
     "unlocks": [

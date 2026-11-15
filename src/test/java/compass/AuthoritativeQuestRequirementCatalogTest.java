@@ -2225,11 +2225,16 @@ public class AuthoritativeQuestRequirementCatalogTest
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
                 .definitionFor("Doric's Quest");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
         assertTrue(quest.getSkillRequirements().isEmpty());
-        assertTrue(quest.getAccessChecks().stream().anyMatch(
-                check -> check.contains("6 clay")
-                        && check.contains("4 copper ores")
-                        && check.contains("2 iron ores")));
+        assertEquals(java.util.Collections.singletonList(
+                        "Bring 6 clay (not soft clay), 4 copper ores, "
+                                + "and 2 iron ores"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
     }
 
     @Test
