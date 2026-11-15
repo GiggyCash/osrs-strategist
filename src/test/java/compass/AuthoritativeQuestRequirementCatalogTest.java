@@ -1427,6 +1427,26 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void witchsPotionKeepsF2pIngredientTimingActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Witch's Potion");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Arrays.asList(
+                        "Bring burnt meat, an eye of newt, and an onion",
+                        "Obtain a rat's tail after starting the quest; it is "
+                                + "not obtainable beforehand",
+                        "Combat encounter: Rat (level 1)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
     public void scorpionCatcherKeepsDungeonRoutesAndJailerConditional()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

@@ -6533,8 +6533,9 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Burnt meat Eye of newt Onion Rat\u0027s tail (only obtainable after starting the quest)",
-      "Combat encounters: Rat (level 1)"
+      "Bring burnt meat, an eye of newt, and an onion",
+      "Obtain a rat\u0027s tail after starting the quest; it is not obtainable beforehand",
+      "Combat encounter: Rat (level 1)"
     ],
     "startLocation": "Talk to Hetty in her house in Rimmington, south of Falador and west of Port Sarim.",
     "unlocks": [
