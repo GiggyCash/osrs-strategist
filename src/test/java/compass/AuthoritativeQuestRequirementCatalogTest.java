@@ -1017,18 +1017,38 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
-    public void curseOfArravDoesNotDuplicateTypedAccessRequirements()
+    public void curseOfArravTypesItemsToolsAndCombatReadiness()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
                 .definitionFor("The Curse of Arrav");
         assertEquals(2, quest.getPrerequisites().size());
         assertEquals(6, quest.getSkillRequirements().size());
-        assertTrue(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Required items:")));
-        assertTrue(quest.getAccessChecks().stream().anyMatch(
-                check -> check.contains("Arrav (level 339)")));
+        assertEquals(4, quest.getItemRequirements().size());
+        assertEquals("Dwellberries",
+                quest.getItemRequirements().get(0).getName());
+        assertEquals(3, quest.getItemRequirements().get(0).getQuantity());
+        assertEquals("Ring of life",
+                quest.getItemRequirements().get(1).getName());
+        assertEquals("Mith grapple",
+                quest.getItemRequirements().get(2).getName());
+        assertEquals("Insulated boots",
+                quest.getItemRequirements().get(3).getName());
+        ItemRule tools = quest.getItemRequirementExpression();
+        assertEquals(ItemRule.Kind.ALL_OF, tools.getKind());
+        assertEquals(ItemRequirementClass.PICKAXE,
+                tools.getChildren().get(0).getItemClass());
+        assertEquals(ItemRequirementClass.CROSSBOW,
+                tools.getChildren().get(1).getItemClass());
+        assertEquals(java.util.Collections.singletonList("Love crossbow"),
+                tools.getChildren().get(1).getExcludedItemNames());
+        assertEquals(java.util.Collections.singletonList(
+                        "Prepare a legal combat setup for the level 141 Golem "
+                                + "guard and level 339 Arrav"),
+                quest.getAccessChecks());
         assertFalse(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Access requirements:")));
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
     }
 
     @Test

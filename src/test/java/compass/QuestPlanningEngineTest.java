@@ -283,6 +283,35 @@ public class QuestPlanningEngineTest
     }
 
     @Test
+    public void curseOfArravAcceptsToolClassesButRejectsLoveCrossbow()
+    {
+        ItemRule tools = new QuestKnowledgeCatalog()
+                .definitionFor("The Curse of Arrav")
+                .getItemRequirementExpression();
+        GameData valid = GameData.builder(account(Membership.P2P, 70, 70, 70))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Arrays.asList(
+                        item("Bronze pickaxe"), item("Rune crossbow")), 1L))
+                .build();
+        assertEquals(RequirementState.VERIFIED,
+                new ItemRequirementEvaluator().evaluate(tools, valid, false)
+                        .getState());
+
+        GameData excluded = GameData.builder(
+                        account(Membership.P2P, 70, 70, 70))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Arrays.asList(
+                        item("Bronze pickaxe"), item("Love crossbow")), 1L))
+                .build();
+        ItemRequirementResult result = new ItemRequirementEvaluator()
+                .evaluate(tools, excluded, false);
+        assertEquals(RequirementState.BLOCKED, result.getState());
+        assertTrue(result.getAction().contains("excluding Love crossbow"));
+    }
+
+    @Test
     public void exactUimQuestSlotRequirementChangesReadiness()
     {
         QuestDefinition definition = new QuestDefinition("Slot test", false, Collections.emptyList(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), ItemRule.itemClass(

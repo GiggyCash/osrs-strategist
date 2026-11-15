@@ -4516,11 +4516,62 @@
       "THIEVING": 62,
       "SLAYER": 37
     },
-    "itemRequirements": [],
+    "itemRequirements": [
+      {
+        "name": "Dwellberries",
+        "quantity": 3
+      },
+      {
+        "name": "Ring of life",
+        "quantity": 1
+      },
+      {
+        "name": "Mith grapple",
+        "quantity": 1
+      },
+      {
+        "name": "Insulated boots",
+        "quantity": 1
+      }
+    ],
+    "itemRequirementExpression": {
+      "kind": "ALL_OF",
+      "itemNames": [],
+      "quantity": 1,
+      "quantityMode": "EXACT",
+      "scope": "IMMEDIATELY_USABLE",
+      "excludedItemNames": [],
+      "checkAction": "",
+      "children": [
+        {
+          "kind": "ITEM_CLASS",
+          "itemNames": [],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "OWNED_OR_RETRIEVABLE",
+          "itemClass": "PICKAXE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        },
+        {
+          "kind": "ITEM_CLASS",
+          "itemNames": [],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "OWNED_OR_RETRIEVABLE",
+          "itemClass": "CROSSBOW",
+          "excludedItemNames": [
+            "Love crossbow"
+          ],
+          "checkAction": "",
+          "children": []
+        }
+      ]
+    },
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 3 dwellberries Ring of life Any pickaxe Any crossbow (except the love crossbow) Mith grapple (Hallowed grapple will not work) Insulated boots",
-      "Combat encounters: Golem guard (level 141) Arrav (level 339)"
+      "Prepare a legal combat setup for the level 141 Golem guard and level 339 Arrav"
     ],
     "startLocation": "Talk to Elias White at the Uzer Oasis.",
     "unlocks": [
