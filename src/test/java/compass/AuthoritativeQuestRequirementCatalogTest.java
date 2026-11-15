@@ -1986,6 +1986,37 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void atFirstLightKeepsNearbyAndQuestItemAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("At First Light");
+        assertEquals(java.util.Arrays.asList(
+                        "Children of the Sun", "Eagles' Peak"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(46),
+                quest.getSkillRequirements().get(Skill.HUNTER));
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.HERBLORE));
+        assertEquals(Integer.valueOf(27),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertEquals(java.util.Arrays.asList(
+                        "46 Hunter, 30 Herblore, and 27 Construction are "
+                                + "non-boostable and required to start the "
+                                + "quest",
+                        "Bring a needle or costume needle; a needle spawns "
+                                + "nearby in Pellem's Fur Store",
+                        "Obtain a hammer during the quest or bring an "
+                                + "Imcando hammer",
+                        "Obtain 2 jerboa tails during the quest, or buy a "
+                                + "box trap from Imia's Supplies nearby"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

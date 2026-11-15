@@ -4336,8 +4336,10 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Needle or costume needle (one needle spawns in Pellem\u0027s Fur Store nearby) Hammer (obtainable during quest) or Imcando hammer 2 jerboa tails (obtainable during quest) or a Box trap (can be bought from Imia\u0027s Supplies nearby)",
-      "Access requirements: link\u003dHunter|alt\u003dHunter 46 Hunter [ not boostable ] [ required to start ] link\u003dHerblore|alt\u003dHerblore 30 Herblore [ not boostable ] [ required to start ] link\u003dConstruction|alt\u003dConstruction 27 Construction [ not boostable ] [ required to start ] Completion of the following quests: Children of the Sun Eagles\u0027 Peak"
+      "46 Hunter, 30 Herblore, and 27 Construction are non-boostable and required to start the quest",
+      "Bring a needle or costume needle; a needle spawns nearby in Pellem\u0027s Fur Store",
+      "Obtain a hammer during the quest or bring an Imcando hammer",
+      "Obtain 2 jerboa tails during the quest, or buy a box trap from Imia\u0027s Supplies nearby"
     ],
     "startLocation": "Talk to Guildmaster Apatura at the Hunter Guild.",
     "unlocks": [
