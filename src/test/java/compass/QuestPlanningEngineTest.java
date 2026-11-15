@@ -312,6 +312,38 @@ public class QuestPlanningEngineTest
     }
 
     @Test
+    public void hopespearsWillAcceptsEquipmentAlternativesAndChecksDiaryRoute()
+    {
+        ItemRule routes = new QuestKnowledgeCatalog()
+                .definitionFor("Hopespear's Will")
+                .getItemRequirementExpression();
+        GameData valid = GameData.builder(account(Membership.P2P, 70, 70, 70))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Arrays.asList(
+                        item("Morytania legs 4"), item("Ring of shadows"),
+                        item("Lunar staff")), 1L))
+                .build();
+        assertEquals(RequirementState.VERIFIED,
+                new ItemRequirementEvaluator().evaluate(routes, valid, false)
+                        .getState());
+
+        GameData diaryRoute = GameData.builder(
+                        account(Membership.P2P, 70, 70, 70))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Arrays.asList(
+                        item("Ghostspeak amulet"),
+                        item("Ring of visibility")), 1L))
+                .build();
+        ItemRequirementResult result = new ItemRequirementEvaluator()
+                .evaluate(routes, diaryRoute, false);
+        assertEquals(RequirementState.CHECK_NEEDED, result.getState());
+        assertTrue(result.getAction().contains(
+                "Lumbridge & Draynor Diary is fully completed"));
+    }
+
+    @Test
     public void exactUimQuestSlotRequirementChangesReadiness()
     {
         QuestDefinition definition = new QuestDefinition("Slot test", false, Collections.emptyList(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), ItemRule.itemClass(

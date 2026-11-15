@@ -6730,11 +6730,88 @@
     "skillRequirements": {
       "PRAYER": 50
     },
-    "itemRequirements": [],
+    "itemRequirements": [
+      {
+        "name": "Goblin potion",
+        "quantity": 1
+      }
+    ],
+    "itemRequirementExpression": {
+      "kind": "ALL_OF",
+      "itemNames": [],
+      "quantity": 1,
+      "quantityMode": "EXACT",
+      "scope": "IMMEDIATELY_USABLE",
+      "excludedItemNames": [],
+      "checkAction": "",
+      "children": [
+        {
+          "kind": "ITEM",
+          "itemNames": [
+            "Ghostspeak amulet",
+            "Morytania legs 2",
+            "Morytania legs 3",
+            "Morytania legs 4"
+          ],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "OWNED_OR_RETRIEVABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        },
+        {
+          "kind": "ITEM",
+          "itemNames": [
+            "Ring of visibility",
+            "Ring of shadows"
+          ],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "OWNED_OR_RETRIEVABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        },
+        {
+          "kind": "ANY_OF",
+          "itemNames": [],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": [
+            {
+              "kind": "ITEM",
+              "itemNames": [
+                "Dramen staff",
+                "Lunar staff"
+              ],
+              "quantity": 1,
+              "quantityMode": "EXACT",
+              "scope": "OWNED_OR_RETRIEVABLE",
+              "excludedItemNames": [],
+              "checkAction": "",
+              "children": []
+            },
+            {
+              "kind": "CHECK_NEEDED",
+              "itemNames": [],
+              "quantity": 1,
+              "quantityMode": "EXACT",
+              "scope": "IMMEDIATELY_USABLE",
+              "excludedItemNames": [],
+              "checkAction": "Confirm the Lumbridge & Draynor Diary is fully completed",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Ghostspeak amulet or Morytania legs 2 or better Ring of visibility or ring of shadows Goblin potion Dramen or lunar staff (unless the Lumbridge \u0026 Draynor Diary has been fully completed) Food and potions to defeat 5 enemies without armour, weapons, or magic",
-      "Combat encounters: Snothead (level 32) Snailfeet (level 56) Mosschin (level 88) Redeyes (level 121) Strongbones (level 184)"
+      "Prepare enough food and potions to defeat Snothead (level 32), Snailfeet (level 56), Mosschin (level 88), Redeyes (level 121), and Strongbones (level 184) without armour, weapons, or magic"
     ],
     "startLocation": "Speak to Hopespear in the crypt of the Goblin Temple.",
     "unlocks": [

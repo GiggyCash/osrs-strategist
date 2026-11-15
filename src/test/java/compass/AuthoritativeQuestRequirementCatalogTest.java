@@ -1129,10 +1129,34 @@ public class AuthoritativeQuestRequirementCatalogTest
         assertFalse(quest.getPrerequisites().contains("The Restless Ghost"));
         assertEquals(Integer.valueOf(50),
                 quest.getSkillRequirements().get(Skill.PRAYER));
-        assertTrue(quest.getAccessChecks().stream().anyMatch(
-                check -> check.contains("Strongbones (level 184)")));
+        assertEquals(1, quest.getItemRequirements().size());
+        assertEquals("Goblin potion",
+                quest.getItemRequirements().get(0).getName());
+        ItemRule routes = quest.getItemRequirementExpression();
+        assertEquals(ItemRule.Kind.ALL_OF, routes.getKind());
+        assertEquals(3, routes.getChildren().size());
+        assertTrue(routes.getChildren().get(0).getItemNames()
+                .contains("Morytania legs 4"));
+        assertTrue(routes.getChildren().get(1).getItemNames()
+                .contains("Ring of shadows"));
+        assertEquals(ItemRule.Kind.ANY_OF,
+                routes.getChildren().get(2).getKind());
+        assertTrue(routes.getChildren().get(2).getChildren().get(0)
+                .getItemNames().contains("Lunar staff"));
+        assertTrue(routes.getChildren().get(2).getChildren().get(1)
+                .getCheckAction().contains(
+                        "Lumbridge & Draynor Diary is fully completed"));
+        assertEquals(java.util.Collections.singletonList(
+                        "Prepare enough food and potions to defeat Snothead "
+                                + "(level 32), Snailfeet (level 56), Mosschin "
+                                + "(level 88), Redeyes (level 121), and "
+                                + "Strongbones (level 184) without armour, "
+                                + "weapons, or magic"),
+                quest.getAccessChecks());
         assertFalse(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Access requirements:")));
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
     }
 
     @Test
