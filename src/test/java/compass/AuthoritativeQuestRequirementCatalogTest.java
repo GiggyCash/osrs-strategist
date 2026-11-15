@@ -1335,6 +1335,22 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void xMarksTheSpotKeepsF2pSpadeConstraintActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("X Marks the Spot");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Bring a spade; the Eastfloor spade does not work"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void scorpionCatcherKeepsDungeonRoutesAndJailerConditional()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

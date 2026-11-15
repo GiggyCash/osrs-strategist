@@ -6539,7 +6539,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Spade (the Eastfloor spade does not work)"
+      "Bring a spade; the Eastfloor spade does not work"
     ],
     "startLocation": "Talk to Veos in The Sheared Ram in Lumbridge.",
     "unlocks": [
