@@ -4012,7 +4012,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Hammer (obtainable during the quest) Saw (obtainable during the quest)"
+      "Obtain a hammer and saw during the quest"
     ],
     "startLocation": "Talk to Will and Anne on the docks of Port Sarim.",
     "unlocks": [

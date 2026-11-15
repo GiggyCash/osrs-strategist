@@ -2040,6 +2040,22 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void pandemoniumKeepsQuestObtainableToolsActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Pandemonium");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Obtain a hammer and saw during the quest"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")
+                        || check.startsWith("Combat encounters:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
